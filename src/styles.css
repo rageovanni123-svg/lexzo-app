@@ -1,0 +1,300 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system definition.
+ *
+ * The @theme inline block maps CSS custom properties to Tailwind utility
+ * classes (e.g. --color-primary -> bg-primary, text-primary).
+ *
+ * The :root and .dark blocks define the actual color values using oklch.
+ * All colors MUST use oklch format.
+ *
+ * To add a new semantic color:
+ * 1. Add the variable to :root (light value) and .dark (dark value)
+ * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ */
+
+@theme inline {
+  --font-sans: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --shadow-card: var(--card-shadow);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-gema: var(--gema);
+  --color-gema-foreground: var(--gema-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  /* Paleta "placa de esmalte": ultramarino, gema, cal, tinta, tomate */
+  --radius: 0.5rem;
+  --card-shadow: 0 4px 24px -4px rgba(14, 19, 48, 0.18), 0 1px 4px rgba(14, 19, 48, 0.08);
+  --background: oklch(0.969 0.003 247.9);
+  --foreground: oklch(0.201 0.058 272.8);
+  --card: oklch(1.000 0.000 89.9);
+  --card-foreground: oklch(0.201 0.058 272.8);
+  --popover: oklch(1.000 0.000 89.9);
+  --popover-foreground: oklch(0.201 0.058 272.8);
+  --primary: oklch(0.437 0.222 268.2);
+  --primary-foreground: oklch(1.000 0.000 89.9);
+  --secondary: oklch(0.936 0.012 264.5);
+  --secondary-foreground: oklch(0.201 0.058 272.8);
+  --muted: oklch(0.936 0.012 264.5);
+  --muted-foreground: oklch(0.500 0.053 275.0);
+  --accent: oklch(0.936 0.012 264.5);
+  --accent-foreground: oklch(0.201 0.058 272.8);
+  --gema: oklch(0.855 0.166 86.2);
+  --gema-foreground: oklch(0.201 0.058 272.8);
+  --destructive: oklch(0.617 0.202 31.0);
+  --destructive-foreground: oklch(1.000 0.000 89.9);
+  --border: oklch(0.889 0.020 270.2);
+  --input: oklch(0.889 0.020 270.2);
+  --ring: oklch(0.437 0.222 268.2);
+  --chart-1: oklch(0.437 0.222 268.2);
+  --chart-2: oklch(0.855 0.166 86.2);
+  --chart-3: oklch(0.617 0.202 31.0);
+  --chart-4: oklch(0.201 0.058 272.8);
+  --chart-5: oklch(0.500 0.053 275.0);
+  --sidebar: oklch(0.969 0.003 247.9);
+  --sidebar-foreground: oklch(0.201 0.058 272.8);
+  --sidebar-primary: oklch(0.437 0.222 268.2);
+  --sidebar-primary-foreground: oklch(1.000 0.000 89.9);
+  --sidebar-accent: oklch(0.936 0.012 264.5);
+  --sidebar-accent-foreground: oklch(0.201 0.058 272.8);
+  --sidebar-border: oklch(0.889 0.020 270.2);
+  --sidebar-ring: oklch(0.437 0.222 268.2);
+}
+
+.dark {
+  --background: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.984 0.003 247.858);
+  --card: oklch(0.208 0.042 265.755);
+  --card-foreground: oklch(0.984 0.003 247.858);
+  --popover: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.929 0.013 255.508);
+  --primary-foreground: oklch(0.208 0.042 265.755);
+  --secondary: oklch(0.279 0.041 260.031);
+  --secondary-foreground: oklch(0.984 0.003 247.858);
+  --muted: oklch(0.279 0.041 260.031);
+  --muted-foreground: oklch(0.704 0.04 256.788);
+  --accent: oklch(0.279 0.041 260.031);
+  --accent-foreground: oklch(0.984 0.003 247.858);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.551 0.027 264.364);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.208 0.042 265.755);
+  --sidebar-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.279 0.041 260.031);
+  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.551 0.027 264.364);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+}
+
+/*
+ * Efeito "vidro" (liquid glass) para barras e botões.
+ * Usa backdrop-filter; onde não há suporte, cai para um fundo sólido.
+ *  .glass      -> barras (busca, topo, header do admin)
+ *  .glass-btn  -> botões e pílulas, com estado de pressão
+ */
+.glass {
+  background: color-mix(in oklab, var(--card) 58%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.12),
+    0 8px 28px -10px rgba(36, 55, 201, 0.35);
+}
+
+.glass-btn {
+  background: color-mix(in oklab, var(--card) 45%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(170%);
+  backdrop-filter: blur(14px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 4px 14px -6px rgba(36, 55, 201, 0.32);
+  transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.glass-btn:hover {
+  background: color-mix(in oklab, var(--card) 65%, transparent);
+}
+
+.glass-btn:active {
+  transform: scale(0.95);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 2px 8px -6px rgba(15, 23, 42, 0.3);
+}
+
+.dark .glass,
+.dark .glass-btn {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 8px 28px -10px rgba(0, 0, 0, 0.6);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .glass-btn {
+    background: var(--card);
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Opera */
+}
+
+/* Map container: enable hardware acceleration and native touch panning */
+.maplibregl-canvas-container {
+  touch-action: pan-x pan-y;
+}
+
+/* Bottom sheet scroll area: hint GPU layer promotion */
+[data-bottom-sheet-scroll] {
+  will-change: scroll-position;
+  -webkit-overflow-scrolling: touch;
+}
+
+/*
+ * Identidade "placa de esmalte de boteco".
+ *  .letreiro  -> nomes em Archivo ultracondensada e pesada, como letreiro pintado
+ *  .placa     -> chapa azul com filete branco duplo e quatro rebites
+ *  .cardapio-* -> linhas de cardápio: rótulo ........ valor
+ */
+.letreiro {
+  font-stretch: 62%;
+  font-weight: 800;
+  letter-spacing: 0.005em;
+  line-height: 0.92;
+  font-variation-settings: "wdth" 62;
+}
+
+.placa {
+  position: relative;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px -12px rgba(36, 55, 201, 0.55), 0 2px 0 rgba(14, 19, 48, 0.15);
+}
+
+.placa::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1.5px solid rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.placa::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 17px 17px, rgba(255, 255, 255, 0.9) 0 2.2px, transparent 2.8px),
+    radial-gradient(circle at calc(100% - 17px) 17px, rgba(255, 255, 255, 0.9) 0 2.2px, transparent 2.8px),
+    radial-gradient(circle at 17px calc(100% - 17px), rgba(255, 255, 255, 0.9) 0 2.2px, transparent 2.8px),
+    radial-gradient(circle at calc(100% - 17px) calc(100% - 17px), rgba(255, 255, 255, 0.9) 0 2.2px, transparent 2.8px);
+}
+
+.cardapio-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.65rem 0;
+}
+
+.cardapio-label {
+  flex: none;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.cardapio-leader {
+  flex: 1 1 auto;
+  min-width: 1rem;
+  border-bottom: 2px dotted color-mix(in oklab, var(--foreground) 32%, transparent);
+  transform: translateY(-0.28em);
+}
+
+.cardapio-value {
+  flex: none;
+  max-width: 62%;
+  text-align: right;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-btn {
+    transition: none;
+  }
+}
