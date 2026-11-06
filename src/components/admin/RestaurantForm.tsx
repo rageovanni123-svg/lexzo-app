@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DEFAULT_CITY } from "@/lib/site";
 import { Switch } from "@/components/ui/switch";
 import { NEIGHBORHOODS, NEIGHBORHOOD_BY_NAME } from "@/data/neighborhoods";
 import { categories, slugify } from "@/data/restaurants";
@@ -150,12 +151,12 @@ export function RestaurantForm({ id, onDone }: { id: string | null; onDone: () =
     setSearching(true);
     setSearchErr(null);
     try {
-      // Nominatim (OpenStreetMap) — gratuito, sem chave. Viés para Uberlândia/MG/BR.
+      // Nominatim (OpenStreetMap) — gratuito, sem chave. Viés para a cidade padrão (DEFAULT_CITY).
       const url = new URL("https://nominatim.openstreetmap.org/search");
       url.searchParams.set("format", "json");
       url.searchParams.set("limit", "1");
       url.searchParams.set("countrycodes", "br");
-      url.searchParams.set("q", `${q}, Uberlândia, MG`);
+      url.searchParams.set("q", `${q}, ${DEFAULT_CITY.name}, ${DEFAULT_CITY.region}`);
       const res = await fetch(url.toString(), { headers: { "Accept-Language": "pt-BR" } });
       if (!res.ok) throw new Error("Falha na busca");
       const arr = (await res.json()) as Array<{ lat: string; lon: string; display_name: string }>;

@@ -1,7 +1,7 @@
-# Placeali — mapa de restaurantes de Uberlândia
+# Placeali — encontre lugares no mapa
 
-Mapa com os restaurantes, uma página por estabelecimento (indexável pelo Google) e um painel `/admin`
-para criar e gerenciar os restaurantes.
+Mapa de lugares (começando pelos restaurantes), uma página por estabelecimento (indexável pelo Google)
+e um painel `/admin` para criar e gerenciar os estabelecimentos.
 
 **Stack:** TanStack Start (React 19) · Supabase (Postgres + Auth) · MapLibre · Tailwind v4 · Nitro · deploy na Vercel
 

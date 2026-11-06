@@ -1,5 +1,6 @@
 import { priceFromLabel, type Restaurant } from "@/data/restaurants";
 import { safeHttpUrl } from "@/lib/safe-url";
+import { DEFAULT_CITY } from "@/lib/site";
 
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const WEEKEND = ["Saturday", "Sunday"];
@@ -58,7 +59,7 @@ export function ifoodUrl(r: Pick<Restaurant, "ifoodUrl" | "menuUrl">): string | 
 
 export function restaurantDescription(r: Restaurant): string {
   if (r.description) return r.description;
-  return `${r.name}: restaurante de comida ${r.category.toLowerCase()} no bairro ${r.neighborhood}, Uberlândia${
+  return `${r.name}: restaurante de comida ${r.category.toLowerCase()} no bairro ${r.neighborhood}, ${DEFAULT_CITY.name}${
     r.delivery ? ", com delivery" : ""
   }.`;
 }
@@ -90,8 +91,8 @@ export function restaurantJsonLd(r: Restaurant): string {
       ? {
           "@type": "PostalAddress",
           streetAddress: r.address,
-          addressLocality: "Uberlândia",
-          addressRegion: "MG",
+          addressLocality: DEFAULT_CITY.name,
+          addressRegion: DEFAULT_CITY.region,
           addressCountry: "BR",
         }
       : undefined,

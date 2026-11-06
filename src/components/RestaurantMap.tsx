@@ -308,7 +308,7 @@ export function RestaurantMap() {
         />
         <div className="mt-2 flex items-center justify-between px-4">
           <span className="pointer-events-auto text-xs font-medium text-foreground/70">
-            Uberlândia · {filtered.length} {filtered.length === 1 ? "lugar" : "lugares"}
+            {filtered.length} {filtered.length === 1 ? "lugar" : "lugares"}
           </span>
           <FilterMenu
             category={category}
@@ -326,8 +326,8 @@ export function RestaurantMap() {
             className="mx-6 rounded-2xl p-6 text-center shadow-lg"
             style={{ background: "rgba(255,255,255,0.96)" }}
           >
-            <p className="letreiro text-3xl text-primary">Nenhum restaurante</p>
-            <p className="mt-2 text-sm text-muted-foreground">Nenhum lugar bate com esses filtros. Remova um filtro ou limpe a busca.</p>
+            <p className="letreiro text-3xl text-primary">Nenhum lugar encontrado</p>
+            <p className="mt-2 text-sm text-muted-foreground">Nada bate com esses filtros. Remova um filtro ou limpe a busca.</p>
           </div>
         </div>
       )}

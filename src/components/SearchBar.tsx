@@ -56,7 +56,7 @@ export function SearchBar({ restaurants, value, onChange, onSelectNeighborhood, 
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
-          placeholder="Buscar bairro ou restaurante…"
+          placeholder="Buscar bairro ou lugar…"
           className="w-full bg-transparent text-base outline-none placeholder:text-muted-foreground"
           aria-label="Buscar"
         />

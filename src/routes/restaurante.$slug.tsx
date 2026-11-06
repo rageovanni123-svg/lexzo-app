@@ -13,6 +13,7 @@ import {
   restaurantJsonLd,
 } from "@/lib/seo";
 import { safeHttpUrl } from "@/lib/safe-url";
+import { DEFAULT_CITY, SITE_NAME } from "@/lib/site";
 import { priceFromLabel, slugify, type Restaurant } from "@/data/restaurants";
 
 export const Route = createFileRoute("/restaurante/$slug")({
@@ -39,12 +40,12 @@ export const Route = createFileRoute("/restaurante/$slug")({
     if (!r) {
       return {
         meta: [
-          { title: "Restaurante não encontrado | Placeali" },
+          { title: "Lugar não encontrado | Placeali" },
           { name: "robots", content: "noindex" },
         ],
       };
     }
-    const title = `${r.name} — ${r.category} em ${r.neighborhood} | Placeali Uberlândia`;
+    const title = `${r.name} — ${r.category} em ${r.neighborhood}, ${DEFAULT_CITY.name} | ${SITE_NAME}`;
     const description = restaurantDescription(r);
     const image = safeHttpUrl(r.image);
     return {

@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 
 function NotFoundComponent() {
   return (
@@ -64,9 +64,6 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-const DESCRIPTION =
-  "Encontre restaurantes em Uberlândia no mapa: veja horários, contato, cardápio e como chegar em cada lugar.";
-
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
@@ -75,17 +72,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "viewport",
         content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
       },
-      { title: `${SITE_NAME} — Restaurantes em Uberlândia` },
-      { name: "description", content: DESCRIPTION },
+      { title: `${SITE_NAME} — ${SITE_TAGLINE}` },
+      { name: "description", content: SITE_DESCRIPTION },
       { property: "og:site_name", content: SITE_NAME },
-      { property: "og:title", content: `${SITE_NAME} — Restaurantes em Uberlândia` },
-      { property: "og:description", content: DESCRIPTION },
+      { property: "og:title", content: `${SITE_NAME} — ${SITE_TAGLINE}` },
+      { property: "og:description", content: SITE_DESCRIPTION },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "pt_BR" },
       { property: "og:image", content: `${SITE_URL}/og.png` },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: `${SITE_NAME} — Restaurantes em Uberlândia` },
-      { name: "twitter:description", content: DESCRIPTION },
+      { name: "twitter:title", content: `${SITE_NAME} — ${SITE_TAGLINE}` },
+      { name: "twitter:description", content: SITE_DESCRIPTION },
       { name: "twitter:image", content: `${SITE_URL}/og.png` },
       { name: "theme-color", content: "#2437C9" },
       { name: "mobile-web-app-capable", content: "yes" },
