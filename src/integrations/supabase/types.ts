@@ -34,7 +34,7 @@ export type Database = {
           name: string
           neighborhood: string
           phone: string | null
-          price: string
+          price_from: number | null
           rating: number
           slug: string
           updated_at: string
@@ -59,7 +59,7 @@ export type Database = {
           name: string
           neighborhood: string
           phone?: string | null
-          price?: string
+          price_from?: number | null
           rating?: number
           slug: string
           updated_at?: string
@@ -84,7 +84,7 @@ export type Database = {
           name?: string
           neighborhood?: string
           phone?: string | null
-          price?: string
+          price_from?: number | null
           rating?: number
           slug?: string
           updated_at?: string

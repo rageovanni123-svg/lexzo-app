@@ -1,5 +1,4 @@
 export type Category = "Italiana" | "Japonesa" | "Brasileira" | "Hambúrguer" | "Café" | "Vegetariana" | "Açaí";
-export type Price = "$" | "$$" | "$$$";
 
 export interface Hours {
   weekdays: string;
@@ -12,7 +11,8 @@ export interface Restaurant {
   name: string;
   category: Category;
   neighborhood: string;
-  price: Price;
+  /** Preço inicial em reais ("a partir de"). Ausente = não exibir preço. */
+  priceFrom?: number;
   delivery: boolean;
   rating: number;
   image: string;
@@ -49,7 +49,16 @@ export const categories: Category[] = [
   "Vegetariana",
   "Açaí",
 ];
-export const prices: Price[] = ["$", "$$", "$$$"];
+
+/** 25 -> "a partir de R$ 25" | 24.9 -> "a partir de R$ 24,90" | undefined -> undefined */
+export function priceFromLabel(value?: number | null): string | undefined {
+  if (value == null || !Number.isFinite(value) || value < 0) return undefined;
+  const text = value.toLocaleString("pt-BR", {
+    minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
+    maximumFractionDigits: 2,
+  });
+  return `a partir de R$ ${text}`;
+}
 
 export const CATEGORY_EMOJI: Record<Category, string> = {
   Italiana: "🍕",

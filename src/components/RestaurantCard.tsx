@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from "react";
 import { Star, MapPin, X, Phone, Instagram, Navigation, ExternalLink } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { Restaurant } from "@/data/restaurants";
-import { CATEGORY_EMOJI } from "@/data/restaurants";
+import { CATEGORY_EMOJI, priceFromLabel } from "@/data/restaurants";
 import { isOpenNow } from "@/lib/hours";
 import { safeHttpUrl } from "@/lib/safe-url";
 
@@ -108,7 +108,9 @@ export const RestaurantCard = memo(function RestaurantCard({
                 <span className="rounded-sm bg-gema px-2 py-0.5 text-[13px] font-bold text-gema-foreground">
                   {restaurant.category}
                 </span>
-                <span className="font-bold text-foreground">{restaurant.price}</span>
+                {priceFromLabel(restaurant.priceFrom) && (
+                  <span className="font-bold text-foreground">{priceFromLabel(restaurant.priceFrom)}</span>
+                )}
               </div>
 
               <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px]">

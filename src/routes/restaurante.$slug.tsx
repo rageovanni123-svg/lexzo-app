@@ -13,7 +13,7 @@ import {
   restaurantJsonLd,
 } from "@/lib/seo";
 import { safeHttpUrl } from "@/lib/safe-url";
-import { slugify, type Restaurant } from "@/data/restaurants";
+import { priceFromLabel, slugify, type Restaurant } from "@/data/restaurants";
 
 export const Route = createFileRoute("/restaurante/$slug")({
   loader: async ({ params }): Promise<{ restaurant: Restaurant | null }> => {
@@ -129,7 +129,7 @@ function RestaurantContent({ r }: { r: Restaurant }) {
               <h1 className="letreiro mt-3 break-words text-[clamp(2.75rem,15vw,4.75rem)]">{r.name}</h1>
               <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 pr-20 text-[14px] text-primary-foreground/90">
                 <span>{r.neighborhood}</span>
-                <span className="font-bold">{r.price}</span>
+                {priceFromLabel(r.priceFrom) && <span className="font-bold">{priceFromLabel(r.priceFrom)}</span>}
                 {hasRating && (
                   <span className="inline-flex items-center gap-1 font-semibold">
                     <Star className="h-4 w-4 fill-gema text-gema" />

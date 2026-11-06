@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { NEIGHBORHOODS, NEIGHBORHOOD_BY_NAME } from "@/data/neighborhoods";
-import { categories, prices, slugify } from "@/data/restaurants";
+import { categories, slugify } from "@/data/restaurants";
 
 const MAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
 
@@ -16,7 +16,8 @@ interface FormState {
   slug: string;
   category: string;
   neighborhood: string;
-  price: string;
+  showPrice: boolean;
+  price_from: string;
   delivery: boolean;
   rating: number;
   image: string;
@@ -39,7 +40,8 @@ const empty: FormState = {
   slug: "",
   category: categories[0],
   neighborhood: NEIGHBORHOODS[0].name,
-  price: prices[1],
+  showPrice: false,
+  price_from: "",
   delivery: false,
   rating: 4.5,
   image: "",
@@ -76,7 +78,7 @@ export function RestaurantForm({ id, onDone }: { id: string | null; onDone: () =
       if (data) {
         // Coerce nullable string columns to "" so .trim() never blows up.
         const stringKeys: (keyof FormState)[] = [
-          "name","slug","category","neighborhood","price","image","phone","whatsapp",
+          "name","slug","category","neighborhood","image","phone","whatsapp",
           "ifood_url","menu_url","instagram","address","hours_weekdays","hours_weekends","description",
         ];
         const cleaned: Record<string, unknown> = { ...data };
@@ -84,6 +86,9 @@ export function RestaurantForm({ id, onDone }: { id: string | null; onDone: () =
           if (cleaned[k as string] == null) cleaned[k as string] = "";
         }
         const merged = { ...empty, ...cleaned } as FormState;
+        const rawPrice = (data as { price_from?: number | string | null }).price_from;
+        merged.showPrice = rawPrice != null;
+        merged.price_from = rawPrice != null ? String(rawPrice) : "";
         if (data.lat == null || data.lng == null) {
           merged.lat = empty.lat;
           merged.lng = empty.lng;
@@ -203,7 +208,14 @@ export function RestaurantForm({ id, onDone }: { id: string | null; onDone: () =
       setErr("Informe o nome (ou um slug) para gerar o endereço da página");
       return;
     }
-    const payload = { ...f, slug, instagram: instagramHandle || null, image: f.image || null, gallery: cleanGallery };
+    const { showPrice, price_from, ...rest } = f;
+    const priceNumber = showPrice && price_from.trim() !== "" ? Number(price_from.replace(",", ".")) : null;
+    if (showPrice && (priceNumber === null || !Number.isFinite(priceNumber) || priceNumber < 0)) {
+      setErr("Informe um preço válido (ex.: 25 ou 24,90) ou desligue “Mostrar a partir de”.");
+      setSaving(false);
+      return;
+    }
+    const payload = { ...rest, price_from: priceNumber, slug, instagram: instagramHandle || null, image: f.image || null, gallery: cleanGallery };
     const { error } = id
       ? await supabase.from("restaurants").update(payload).eq("id", id)
       : await supabase.from("restaurants").insert(payload);
@@ -250,10 +262,26 @@ export function RestaurantForm({ id, onDone }: { id: string | null; onDone: () =
             {NEIGHBORHOODS.map((n) => <option key={n.name}>{n.name}</option>)}
           </select>
         </Field>
-        <Field label="Faixa de preço">
-          <select className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm" value={f.price} onChange={(e) => setField("price", e.target.value)}>
-            {prices.map((p) => <option key={p}>{p}</option>)}
-          </select>
+        <Field label="Preço">
+          <label className="flex items-center gap-2 text-sm">
+            <Switch checked={f.showPrice} onCheckedChange={(v) => setField("showPrice", v)} />
+            Mostrar “a partir de” na página
+          </label>
+          {f.showPrice && (
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">a partir de R$</span>
+              <Input
+                type="number"
+                inputMode="decimal"
+                min="0"
+                step="0.01"
+                value={f.price_from}
+                onChange={(e) => setField("price_from", e.target.value)}
+                placeholder="25"
+                className="max-w-[140px]"
+              />
+            </div>
+          )}
         </Field>
         <Field label="Endereço"><Input value={f.address} onChange={(e) => setField("address", e.target.value)} /></Field>
         <Field label="Imagem (URL)"><Input value={f.image} onChange={(e) => setField("image", e.target.value)} /></Field>

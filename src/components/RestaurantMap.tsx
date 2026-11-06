@@ -36,7 +36,6 @@ export function RestaurantMap() {
   const { data: restaurants = [] } = useRestaurants();
   const {
     category, setCategory,
-    price, setPrice,
     delivery, setDelivery,
     search, setSearch,
     filtered,
@@ -312,10 +311,8 @@ export function RestaurantMap() {
           </span>
           <FilterMenu
             category={category}
-            price={price}
             delivery={delivery}
             onCategory={setCategory}
-            onPrice={setPrice}
             onDelivery={setDelivery}
           />
         </div>

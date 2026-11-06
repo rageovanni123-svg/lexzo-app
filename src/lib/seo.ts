@@ -1,4 +1,4 @@
-import type { Restaurant } from "@/data/restaurants";
+import { priceFromLabel, type Restaurant } from "@/data/restaurants";
 import { safeHttpUrl } from "@/lib/safe-url";
 
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -84,7 +84,7 @@ export function restaurantJsonLd(r: Restaurant): string {
     description: restaurantDescription(r),
     image: images.length ? images : undefined,
     servesCuisine: r.category,
-    priceRange: r.price,
+    priceRange: priceFromLabel(r.priceFrom),
     telephone: r.phone,
     address: r.address
       ? {

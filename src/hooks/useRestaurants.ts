@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Restaurant, Category, Price } from "@/data/restaurants";
+import type { Restaurant, Category } from "@/data/restaurants";
 
 // ─── DB row ───────────────────────────────────────────────────────────────────
 
@@ -10,7 +10,7 @@ export interface DbRow {
   name: string;
   category: string;
   neighborhood: string;
-  price: string;
+  price_from: number | string | null;
   delivery: boolean;
   rating: number;
   image: string | null;
@@ -39,7 +39,7 @@ export function rowToRestaurant(r: DbRow): Restaurant {
     name: r.name,
     category: r.category as Category,
     neighborhood: r.neighborhood,
-    price: (r.price as Price) ?? "$$",
+    priceFrom: r.price_from != null && r.price_from !== "" ? Number(r.price_from) : undefined,
     delivery: r.delivery,
     rating: Number(r.rating) || 0,
     image: r.image || DEFAULT_IMAGE,

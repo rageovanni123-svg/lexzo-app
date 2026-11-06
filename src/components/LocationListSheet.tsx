@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, Star } from "lucide-react";
 import type { Restaurant } from "@/data/restaurants";
-import { CATEGORY_EMOJI } from "@/data/restaurants";
+import { CATEGORY_EMOJI, priceFromLabel } from "@/data/restaurants";
 
 interface Props {
   restaurants: Restaurant[];
@@ -110,8 +110,12 @@ export function LocationListSheet({ restaurants, onClose, onSelect }: Props) {
                         </span>
                         <span style={{ color: "#6B74A6" }}>·</span>
                         <span>{r.category}</span>
-                        <span style={{ color: "#6B74A6" }}>·</span>
-                        <span>{r.price}</span>
+                        {priceFromLabel(r.priceFrom) && (
+                          <>
+                            <span style={{ color: "#6B74A6" }}>·</span>
+                            <span>{priceFromLabel(r.priceFrom)}</span>
+                          </>
+                        )}
                       </div>
                     </div>
                   </button>

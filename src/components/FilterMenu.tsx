@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, Menu, SlidersHorizontal, X } from "lucide-react";
-import { prices, type Category, type Price } from "@/data/restaurants";
+import { type Category } from "@/data/restaurants";
 import { SECTIONS } from "@/data/sections";
 
 interface Props {
   category: Category | null;
-  price: Price | null;
   delivery: boolean;
   onCategory: (c: Category | null) => void;
-  onPrice: (p: Price | null) => void;
   onDelivery: (d: boolean) => void;
 }
 
@@ -17,11 +15,11 @@ interface Props {
  * Botão redondo de filtros + painel lateral com seções e subseções.
  * Só "Restaurantes" está ativo; as outras seções aparecem como "Em breve".
  */
-export function FilterMenu({ category, price, delivery, onCategory, onPrice, onDelivery }: Props) {
+export function FilterMenu({ category, delivery, onCategory, onDelivery }: Props) {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>("restaurantes");
 
-  const activeCount = (category ? 1 : 0) + (price ? 1 : 0) + (delivery ? 1 : 0);
+  const activeCount = (category ? 1 : 0) + (delivery ? 1 : 0);
 
   useEffect(() => {
     if (!open) return;
@@ -32,7 +30,6 @@ export function FilterMenu({ category, price, delivery, onCategory, onPrice, onD
 
   const clear = () => {
     onCategory(null);
-    onPrice(null);
     onDelivery(false);
   };
 
@@ -142,29 +139,6 @@ export function FilterMenu({ category, price, delivery, onCategory, onPrice, onD
                             );
                           })}
 
-                          {s.active && (
-                            <div className="mt-2 px-3">
-                              <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-[#5A6182]">
-                                Faixa de preço
-                              </p>
-                              <div className="flex gap-2">
-                                {prices.map((p) => (
-                                  <button
-                                    key={p}
-                                    type="button"
-                                    onClick={() => onPrice(price === p ? null : p)}
-                                    className={`rounded-full px-3.5 py-1 text-sm font-semibold transition-colors ${
-                                      price === p
-                                        ? "bg-[#2437C9] text-white"
-                                        : "bg-white/80 text-[#0E1330] ring-1 ring-[#0E1330]/10 hover:bg-white"
-                                    }`}
-                                  >
-                                    {p}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
                         </div>
                       )}
                     </div>
