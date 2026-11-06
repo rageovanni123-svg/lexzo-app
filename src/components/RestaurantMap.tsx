@@ -3,14 +3,14 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useNavigate } from "@tanstack/react-router";
 
-import { categories, type Restaurant } from "@/data/restaurants";
+import { categories, type Category, type Restaurant } from "@/data/restaurants";
 import { FilterMenu } from "./FilterMenu";
 import { RestaurantCard } from "./RestaurantCard";
 import { LocationListSheet } from "./LocationListSheet";
 import { SearchBar } from "./SearchBar";
 import { useRestaurants } from "@/hooks/useRestaurants";
 import { useRestaurantFilters } from "@/hooks/useRestaurantFilters";
-import { usePhotoMarker, createRestaurantMarkerImage, pinLetter } from "@/hooks/useMapMarkers";
+import { usePhotoMarker, createRestaurantMarkerImage } from "@/hooks/useMapMarkers";
 import {
   buildSourceData,
   RESTAURANT_SOURCE_ID,
@@ -68,13 +68,13 @@ export function RestaurantMap() {
     const initLayers = () => {
       // Register pin images
       const registerPins = () => {
-        const pins: [string, string | null][] = [
+        const pins: [string, Category | null][] = [
           [GROUP_ICON_ID, null],
-          ...categories.map((c): [string, string | null] => [pinIconId(c), pinLetter(c)]),
+          ...categories.map((c): [string, Category | null] => [pinIconId(c), c]),
         ];
         try {
-          for (const [id, letter] of pins) {
-            const img = createRestaurantMarkerImage(letter);
+          for (const [id, cat] of pins) {
+            const img = createRestaurantMarkerImage(cat);
             if (!img) continue;
             if (map.hasImage(id)) map.updateImage(id, img);
             else map.addImage(id, img, { pixelRatio: 2 });
@@ -84,8 +84,6 @@ export function RestaurantMap() {
         }
       };
       registerPins();
-      // Redesenha as plaquinhas quando a fonte Archivo terminar de carregar.
-      document.fonts?.load("800 16px Archivo").then(registerPins).catch(() => {});
 
       // Source
       if (!map.getSource(RESTAURANT_SOURCE_ID)) {
