@@ -298,3 +298,32 @@
     transition: none;
   }
 }
+
+/* Pin da localização do usuário (ponto azul pulsante) */
+.user-dot {
+  position: relative;
+  width: 22px;
+  height: 22px;
+}
+.user-dot-core {
+  position: absolute;
+  inset: 3px;
+  border-radius: 9999px;
+  background: #2437c9;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(14, 19, 48, 0.45);
+}
+.user-dot-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: rgba(36, 55, 201, 0.35);
+  animation: user-dot-pulse 2s ease-out infinite;
+}
+@keyframes user-dot-pulse {
+  from { transform: scale(0.6); opacity: 1; }
+  to { transform: scale(2.6); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .user-dot-pulse { animation: none; opacity: 0.5; }
+}

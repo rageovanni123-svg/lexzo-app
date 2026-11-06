@@ -5,6 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 
 import { categories, type Category, type Restaurant } from "@/data/restaurants";
 import { FilterMenu } from "./FilterMenu";
+import { LocateButton } from "./LocateButton";
 import { RestaurantCard } from "./RestaurantCard";
 import { LocationListSheet } from "./LocationListSheet";
 import { SearchBar } from "./SearchBar";
@@ -332,6 +333,9 @@ export function RestaurantMap() {
           </div>
         </div>
       )}
+
+      {/* ─── Minha localização (some enquanto o card do restaurante está aberto) ─── */}
+      <LocateButton mapRef={mapRef} hidden={!!selected} />
 
       {/* ─── Version badge ─── */}
       <div className="pointer-events-none absolute bottom-2 left-2 z-20 rounded-md bg-card/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground shadow-sm backdrop-blur">
