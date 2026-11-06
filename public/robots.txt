@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://lexzo1.lovable.app/sitemap.xml
+Sitemap: https://lexzo-app.vercel.app/sitemap.xml

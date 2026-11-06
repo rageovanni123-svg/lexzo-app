@@ -5,6 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 
 import { categories, type Category, type Restaurant } from "@/data/restaurants";
 import { FilterMenu } from "./FilterMenu";
+import { Logo } from "./Logo";
 import { LocateButton } from "./LocateButton";
 import { RestaurantCard } from "./RestaurantCard";
 import { LocationListSheet } from "./LocationListSheet";
@@ -294,8 +295,8 @@ export function RestaurantMap() {
       {/* ─── Top overlay: search + filters ─── */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-20 mx-auto max-w-xl">
         <div className="pointer-events-auto px-4 pt-3">
-          <h1 className="letreiro text-[34px] text-primary drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
-            Lexzo
+          <h1 className="text-[32px] drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
+            <Logo />
           </h1>
         </div>
         <SearchBar

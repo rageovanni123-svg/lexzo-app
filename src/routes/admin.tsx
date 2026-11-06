@@ -12,7 +12,7 @@ const AdminDashboard = lazy(() =>
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Painel Admin — Onde Comer Uberlândia" },
+      { title: "Painel Admin — Placeali" },
       { name: "description", content: "Gerencie restaurantes, veja métricas e edite o catálogo." },
       { name: "robots", content: "noindex,nofollow" },
     ],

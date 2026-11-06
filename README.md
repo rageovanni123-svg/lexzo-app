@@ -1,4 +1,4 @@
-# Lexzo — mapa de restaurantes de Uberlândia
+# Placeali — mapa de restaurantes de Uberlândia
 
 Mapa com os restaurantes, uma página por estabelecimento (indexável pelo Google) e um painel `/admin`
 para criar e gerenciar os restaurantes.

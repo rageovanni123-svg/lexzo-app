@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { ChevronDown, Menu, SlidersHorizontal, X } from "lucide-react";
 import { type Category } from "@/data/restaurants";
 import { SECTIONS } from "@/data/sections";
+import { Logo } from "./Logo";
 
 interface Props {
   category: Category | null;
@@ -65,7 +66,7 @@ export function FilterMenu({ category, delivery, onCategory, onDelivery }: Props
             >
               <div className="flex items-center gap-3 px-5 pb-3 pt-5">
                 <Menu className="h-5 w-5 text-[#5A6182]" />
-                <span className="letreiro text-2xl text-[#2437C9]">Lexzo</span>
+                <Logo className="text-2xl" />
                 <button
                   type="button"
                   onClick={() => setOpen(false)}

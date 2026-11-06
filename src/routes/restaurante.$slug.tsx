@@ -39,12 +39,12 @@ export const Route = createFileRoute("/restaurante/$slug")({
     if (!r) {
       return {
         meta: [
-          { title: "Restaurante não encontrado | Lexzo" },
+          { title: "Restaurante não encontrado | Placeali" },
           { name: "robots", content: "noindex" },
         ],
       };
     }
-    const title = `${r.name} — ${r.category} em ${r.neighborhood} | Lexzo Uberlândia`;
+    const title = `${r.name} — ${r.category} em ${r.neighborhood} | Placeali Uberlândia`;
     const description = restaurantDescription(r);
     const image = safeHttpUrl(r.image);
     return {
