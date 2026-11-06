@@ -4,7 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { useNavigate } from "@tanstack/react-router";
 
 import { categories, type Restaurant } from "@/data/restaurants";
-import { FilterPills } from "./FilterPills";
+import { FilterMenu } from "./FilterMenu";
 import { RestaurantCard } from "./RestaurantCard";
 import { LocationListSheet } from "./LocationListSheet";
 import { SearchBar } from "./SearchBar";
@@ -307,19 +307,19 @@ export function RestaurantMap() {
           onSelectNeighborhood={handleSelectNeighborhood}
           onSelectRestaurant={handleSelectRestaurant}
         />
-        <div className="pointer-events-auto mt-2 flex items-center justify-between px-4 text-xs font-medium text-foreground/70">
-          <span>Uberlândia · {filtered.length} {filtered.length === 1 ? "lugar" : "lugares"}</span>
+        <div className="mt-2 flex items-center justify-between px-4">
+          <span className="pointer-events-auto text-xs font-medium text-foreground/70">
+            Uberlândia · {filtered.length} {filtered.length === 1 ? "lugar" : "lugares"}
+          </span>
+          <FilterMenu
+            category={category}
+            price={price}
+            delivery={delivery}
+            onCategory={setCategory}
+            onPrice={setPrice}
+            onDelivery={setDelivery}
+          />
         </div>
-        <FilterPills
-          category={category}
-          price={price}
-          delivery={delivery}
-          search={search}
-          onCategory={setCategory}
-          onPrice={setPrice}
-          onDelivery={setDelivery}
-          onSearch={setSearch}
-        />
       </div>
 
       {/* ─── Empty state ─── */}
