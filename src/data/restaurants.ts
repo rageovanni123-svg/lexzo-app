@@ -14,7 +14,6 @@ export interface Restaurant {
   /** Preço inicial em reais ("a partir de"). Ausente = não exibir preço. */
   priceFrom?: number;
   delivery: boolean;
-  rating: number;
   image: string;
   coords: [number, number]; // [lng, lat]
 

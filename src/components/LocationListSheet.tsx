@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChevronLeft, Star } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import type { Restaurant } from "@/data/restaurants";
 import { CATEGORY_EMOJI, priceFromLabel } from "@/data/restaurants";
 
@@ -104,15 +104,6 @@ export function LocationListSheet({ restaurants, onClose, onSelect }: Props) {
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-[15px] font-semibold">{r.name}</p>
                       <div className="mt-0.5 flex items-center gap-1.5 text-[12.5px]" style={{ color: "#A9B1D6" }}>
-                        {r.rating > 0 && (
-                          <>
-                            <Star className="h-3.5 w-3.5" style={{ color: "#f59e0b", fill: "#f59e0b" }} />
-                            <span className="font-semibold" style={{ color: "#e2e8f0" }}>
-                              {r.rating.toFixed(1).replace(".", ",")}
-                            </span>
-                            <span style={{ color: "#6B74A6" }}>·</span>
-                          </>
-                        )}
                         <span>{r.category}</span>
                         {priceFromLabel(r.priceFrom) && (
                           <>

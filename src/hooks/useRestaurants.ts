@@ -12,7 +12,6 @@ export interface DbRow {
   neighborhood: string;
   price_from: number | string | null;
   delivery: boolean;
-  rating: number;
   image: string | null;
   lng: number | null;
   lat: number | null;
@@ -41,7 +40,6 @@ export function rowToRestaurant(r: DbRow): Restaurant {
     neighborhood: r.neighborhood,
     priceFrom: r.price_from != null && r.price_from !== "" ? Number(r.price_from) : undefined,
     delivery: r.delivery,
-    rating: Number(r.rating) || 0,
     image: r.image || DEFAULT_IMAGE,
     coords: [r.lng as number, r.lat as number],
     phone: r.phone ?? undefined,

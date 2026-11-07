@@ -20,7 +20,6 @@ interface FormState {
   showPrice: boolean;
   price_from: string;
   delivery: boolean;
-  rating: number;
   image: string;
   lng: number;
   lat: number;
@@ -44,7 +43,6 @@ const empty: FormState = {
   showPrice: false,
   price_from: "",
   delivery: false,
-  rating: 4.5,
   image: "",
   lng: NEIGHBORHOODS[0].coords[0],
   lat: NEIGHBORHOODS[0].coords[1],
@@ -291,7 +289,6 @@ export function RestaurantForm({ id, onDone }: { id: string | null; onDone: () =
         <Field label="iFood URL"><Input value={f.ifood_url} onChange={(e) => setField("ifood_url", e.target.value)} /></Field>
         <Field label="Cardápio URL"><Input value={f.menu_url} onChange={(e) => setField("menu_url", e.target.value)} /></Field>
         <Field label="Instagram (@handle ou URL)"><Input value={f.instagram} onChange={(e) => setField("instagram", e.target.value)} placeholder="@perfil ou https://instagram.com/perfil" /></Field>
-        <Field label="Avaliação (0-5)"><Input type="number" step="0.1" min="0" max="5" value={f.rating} onChange={(e) => setField("rating", Number(e.target.value))} /></Field>
         <Field label="Horário semana"><Input value={f.hours_weekdays} onChange={(e) => setField("hours_weekdays", e.target.value)} placeholder="11:00–23:00" /></Field>
         <Field label="Horário fim de semana"><Input value={f.hours_weekends} onChange={(e) => setField("hours_weekends", e.target.value)} placeholder="12:00–00:00" /></Field>
 

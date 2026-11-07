@@ -35,7 +35,6 @@ export type Database = {
           neighborhood: string
           phone: string | null
           price_from: number | null
-          rating: number
           slug: string
           updated_at: string
           whatsapp: string | null
@@ -60,7 +59,6 @@ export type Database = {
           neighborhood: string
           phone?: string | null
           price_from?: number | null
-          rating?: number
           slug: string
           updated_at?: string
           whatsapp?: string | null
@@ -85,7 +83,6 @@ export type Database = {
           neighborhood?: string
           phone?: string | null
           price_from?: number | null
-          rating?: number
           slug?: string
           updated_at?: string
           whatsapp?: string | null

@@ -1,5 +1,5 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { Star, MapPin, Phone, ArrowLeft, ExternalLink } from "lucide-react";
+import { MapPin, Phone, ArrowLeft, ExternalLink } from "lucide-react";
 import { FaWhatsapp, FaInstagram, FaFacebook } from "react-icons/fa";
 import { rowToRestaurant, type DbRow } from "@/hooks/useRestaurants";
 import { isOpenNow, getTodayHours } from "@/lib/hours";
@@ -100,7 +100,6 @@ function RestaurantContent({ r }: { r: Restaurant }) {
   const mapsUrl = r.address
     ? `https://maps.google.com/?q=${encodeURIComponent(`${r.name} ${r.address}`)}`
     : `https://maps.google.com/?q=${r.coords[1]},${r.coords[0]}`;
-  const hasRating = r.rating > 0;
   const hasInfo = Boolean(r.address || r.hours || r.phone);
 
   return (
@@ -131,12 +130,6 @@ function RestaurantContent({ r }: { r: Restaurant }) {
               <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 pr-20 text-[14px] text-primary-foreground/90">
                 <span>{r.neighborhood}</span>
                 {priceFromLabel(r.priceFrom) && <span className="font-bold">{priceFromLabel(r.priceFrom)}</span>}
-                {hasRating && (
-                  <span className="inline-flex items-center gap-1 font-semibold">
-                    <Star className="h-4 w-4 fill-gema text-gema" />
-                    {r.rating.toFixed(1).replace(".", ",")}
-                  </span>
-                )}
               </div>
             </div>
           </div>

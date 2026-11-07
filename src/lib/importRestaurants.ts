@@ -31,7 +31,6 @@ export interface ImportRow {
   delivery: boolean;
   price_from: number | null;
   description: string | null;
-  rating: number;
   image: null;
   gallery: string[];
 }
@@ -164,7 +163,6 @@ export function parseImportText(text: string): { items: ImportItem[]; error?: st
       delivery: o.delivery === true,
       price_from,
       description: (str(o.description) ?? "").slice(0, 300) || null,
-      rating: 0,
       image: null,
       gallery: [],
     };

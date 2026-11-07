@@ -68,8 +68,7 @@ export function restaurantDescription(r: Restaurant): string {
  * JSON-LD schema.org/Restaurant. Devolve uma string já segura para ir dentro de <script>:
  * "<" é escapado para que um texto com "</script>" cadastrado no admin não feche a tag.
  *
- * Obs.: não emite aggregateRating — a nota é preenchida manualmente (sem reviewCount),
- * e o Google rejeita/penaliza avaliação "autodeclarada".
+ * Obs.: o app não tem nota/avaliação, então nunca emite aggregateRating.
  */
 export function restaurantJsonLd(r: Restaurant): string {
   const images = [r.image, ...(r.gallery ?? [])].map(safeHttpUrl).filter((u): u is string => !!u);
