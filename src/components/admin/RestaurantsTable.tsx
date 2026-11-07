@@ -3,8 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { RestaurantForm } from "./RestaurantForm";
+import { RestaurantImport } from "./RestaurantImport";
 import { priceFromLabel } from "@/data/restaurants";
-import { Pencil, Trash2, Plus, ExternalLink } from "lucide-react";
+import { Pencil, Trash2, Plus, ExternalLink, Upload } from "lucide-react";
 
 interface Row {
   id: string;
@@ -20,6 +21,7 @@ interface Row {
 export function RestaurantsTable() {
   const qc = useQueryClient();
   const [editing, setEditing] = useState<string | null | undefined>(undefined); // undefined=closed, null=new
+  const [importing, setImporting] = useState(false);
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-restaurants"],
     queryFn: async () => {
@@ -50,6 +52,17 @@ export function RestaurantsTable() {
     else refresh();
   };
 
+  if (importing) {
+    return (
+      <RestaurantImport
+        onDone={() => {
+          setImporting(false);
+          refresh();
+        }}
+      />
+    );
+  }
+
   if (editing !== undefined) {
     return (
       <RestaurantForm
@@ -68,9 +81,14 @@ export function RestaurantsTable() {
         <p className="text-sm text-muted-foreground">
           {data ? `${data.length} ${data.length === 1 ? "restaurante" : "restaurantes"}` : ""}
         </p>
-        <Button onClick={() => setEditing(null)}>
-          <Plus className="mr-2 h-4 w-4" /> Novo restaurante
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="glass" onClick={() => setImporting(true)}>
+            <Upload className="mr-2 h-4 w-4" /> Importar lista
+          </Button>
+          <Button onClick={() => setEditing(null)}>
+            <Plus className="mr-2 h-4 w-4" /> Novo restaurante
+          </Button>
+        </div>
       </div>
 
       {error && <p className="text-sm text-destructive">Erro ao carregar: {(error as Error).message}</p>}

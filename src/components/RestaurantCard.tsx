@@ -114,10 +114,12 @@ export const RestaurantCard = memo(function RestaurantCard({
               </div>
 
               <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px]">
-                <span className="inline-flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                  <span className="font-semibold">{restaurant.rating.toFixed(1).replace(".", ",")}</span>
-                </span>
+                {restaurant.rating > 0 && (
+                  <span className="inline-flex items-center gap-1">
+                    <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                    <span className="font-semibold">{restaurant.rating.toFixed(1).replace(".", ",")}</span>
+                  </span>
+                )}
                 {open !== null && (
                   <span className={`inline-flex items-center gap-1.5 font-semibold ${open ? "text-primary" : "text-destructive"}`}>
                     <span aria-hidden="true" className={`h-2.5 w-2.5 rounded-full ${open ? "bg-primary" : "bg-destructive"}`} />
