@@ -16,20 +16,22 @@ function parseRange(text?: string): { opens: string; closes: string } | null {
 function openingHours(r: Restaurant) {
   if (!r.hours) return undefined;
   const week = parseRange(r.hours.weekdays);
-  if (!week) return undefined;
+  // "Fechado" (ou texto que não é um período) não vira horário de funcionamento.
+  const hasWeekendInfo = Boolean(r.hours.weekends);
   const weekend = parseRange(r.hours.weekends);
 
-  const specs = [
-    {
+  const specs: Array<Record<string, unknown>> = [];
+  if (week) {
+    specs.push({
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: weekend ? WEEKDAYS : [...WEEKDAYS, ...WEEKEND],
+      dayOfWeek: hasWeekendInfo ? WEEKDAYS : [...WEEKDAYS, ...WEEKEND],
       ...week,
-    },
-  ];
+    });
+  }
   if (weekend) {
     specs.push({ "@type": "OpeningHoursSpecification", dayOfWeek: WEEKEND, ...weekend });
   }
-  return specs;
+  return specs.length ? specs : undefined;
 }
 
 export function instagramHandle(r: Pick<Restaurant, "instagram" | "menuUrl">): string | undefined {

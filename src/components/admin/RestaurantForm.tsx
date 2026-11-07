@@ -258,6 +258,7 @@ export function RestaurantForm({ id, onDone }: { id: string | null; onDone: () =
         </Field>
         <Field label="Bairro">
           <select className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm" value={f.neighborhood} onChange={(e) => onNeighborhood(e.target.value)}>
+            {!NEIGHBORHOOD_BY_NAME[f.neighborhood] && f.neighborhood && <option>{f.neighborhood}</option>}
             {NEIGHBORHOODS.map((n) => <option key={n.name}>{n.name}</option>)}
           </select>
         </Field>
