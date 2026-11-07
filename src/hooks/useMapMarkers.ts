@@ -45,7 +45,7 @@ function drawGlyph(ctx: CanvasRenderingContext2D, category: Category, cx: number
   ctx.strokeStyle = INK;
 
   switch (category) {
-    case "Italiana": {
+    case "Pizza": {
       // fatia de pizza com borda e pepperoni
       ctx.beginPath();
       ctx.moveTo(-7.5, -5);
@@ -94,6 +94,201 @@ function drawGlyph(ctx: CanvasRenderingContext2D, category: Category, cx: number
       ctx.stroke();
       dot(ctx, -2, 3, 1.1, GOLD);
       dot(ctx, 2, 4.5, 1.1, GOLD);
+      break;
+    }
+    case "Lanches": {
+      // cachorro-quente na diagonal: pão, salsicha (sai pelas pontas) e pão
+      ctx.rotate(-0.5);
+      ctx.beginPath();
+      ctx.roundRect(-7.5, -6.6, 15, 4.6, [4, 4, 1.5, 1.5]);
+      ctx.fill();
+      ctx.lineWidth = 3.8;
+      ctx.beginPath();
+      ctx.moveTo(-9.3, 0.1); ctx.lineTo(9.3, 0.1);
+      ctx.stroke();
+      ctx.strokeStyle = GOLD;
+      ctx.lineWidth = 1.1;
+      ctx.beginPath();
+      ctx.moveTo(-6, 0.1); ctx.lineTo(-4.3, -1.2); ctx.lineTo(-2.6, 1.4); ctx.lineTo(-0.9, -1.2);
+      ctx.lineTo(0.8, 1.4); ctx.lineTo(2.5, -1.2); ctx.lineTo(4.2, 1.4); ctx.lineTo(5.6, 0.1);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.roundRect(-7.5, 2.9, 15, 4.6, [1.5, 1.5, 4, 4]);
+      ctx.fill();
+      break;
+    }
+    case "Italiana": {
+      // prato de macarrão: ninho enrolado
+      dot(ctx, 0, 0, 8.2, INK);
+      ctx.strokeStyle = GOLD;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let a = 0; a <= Math.PI * 5; a += 0.2) {
+        const r = 0.8 + a * 0.43;
+        const x = Math.cos(a) * r;
+        const y = Math.sin(a) * r;
+        if (a === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      break;
+    }
+    case "Marmita": {
+      // marmitex com tampa e divisória
+      ctx.beginPath();
+      ctx.roundRect(-8, -5.5, 16, 13.5, 2.5);
+      ctx.fill();
+      ctx.strokeStyle = GOLD;
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(-8, -1.5); ctx.lineTo(8, -1.5);
+      ctx.moveTo(0, -1.5); ctx.lineTo(0, 8);
+      ctx.stroke();
+      break;
+    }
+    case "Carnes": {
+      // bife com osso em T
+      ctx.beginPath();
+      ctx.moveTo(-7, -2);
+      ctx.bezierCurveTo(-8, -7.5, 2, -8.5, 6, -5);
+      ctx.bezierCurveTo(10, -1.5, 8.5, 5, 3, 7);
+      ctx.bezierCurveTo(-3, 9, -8, 4.5, -7, -2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = GOLD;
+      ctx.lineWidth = 1.7;
+      ctx.beginPath();
+      ctx.moveTo(-3.2, -2.2); ctx.lineTo(4.6, -2.2);
+      ctx.moveTo(0.6, -2.2); ctx.lineTo(0.6, 4.4);
+      ctx.stroke();
+      break;
+    }
+    case "Saudável": {
+      // maçã com folha
+      dot(ctx, 0, 2.2, 6.3, INK);
+      dot(ctx, -2.6, 0.6, 1.1, GOLD);
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(0, -3.2); ctx.lineTo(0.8, -7.4);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.ellipse(3.6, -6.6, 3.2, 1.6, -0.5, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+    case "Árabe": {
+      // espetinho na diagonal
+      ctx.rotate(-0.75);
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(-9, 0); ctx.lineTo(9, 0);
+      ctx.stroke();
+      for (const x of [-5.6, -1.6, 2.4]) {
+        ctx.beginPath();
+        ctx.roundRect(x - 0.2, -3.6, 3.6, 7.2, 1.5);
+        ctx.fill();
+      }
+      break;
+    }
+    case "Chinesa": {
+      // caixinha de yakissoba com alça
+      ctx.beginPath();
+      ctx.moveTo(-7, -2.5); ctx.lineTo(7, -2.5); ctx.lineTo(5, 8); ctx.lineTo(-5, 8);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.roundRect(-7.8, -4.8, 15.6, 2.6, 1.2);
+      ctx.fill();
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(0, -4.6, 4.2, Math.PI, Math.PI * 2);
+      ctx.stroke();
+      ctx.strokeStyle = GOLD;
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(-5.4, 2.2); ctx.lineTo(5.4, 2.2);
+      ctx.stroke();
+      break;
+    }
+    case "Mexicana": {
+      // taco
+      ctx.beginPath();
+      ctx.moveTo(-8, 5.5);
+      ctx.arc(0, 5.5, 8, Math.PI, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = GOLD;
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.arc(0, 5.5, 4.8, Math.PI, 0);
+      ctx.stroke();
+      dot(ctx, -3.2, -3.6, 1.8, INK);
+      dot(ctx, 0, -4.4, 1.8, INK);
+      dot(ctx, 3.2, -3.6, 1.8, INK);
+      break;
+    }
+    case "Pastel": {
+      // pastel com borda frisada
+      ctx.beginPath();
+      ctx.roundRect(-8, -4.5, 16, 11, 2.5);
+      ctx.fill();
+      ctx.strokeStyle = GOLD;
+      ctx.lineWidth = 1.2;
+      ctx.setLineDash([1.4, 1.6]);
+      ctx.beginPath();
+      ctx.roundRect(-5.9, -2.4, 11.8, 6.8, 1);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      break;
+    }
+    case "Doces e Bolos": {
+      // cupcake com cereja
+      ctx.beginPath();
+      ctx.moveTo(-5.2, 1.8); ctx.lineTo(5.2, 1.8); ctx.lineTo(3.8, 8.5); ctx.lineTo(-3.8, 8.5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = GOLD;
+      ctx.lineWidth = 1.1;
+      ctx.beginPath();
+      ctx.moveTo(-1.8, 3.4); ctx.lineTo(-1.4, 7.2);
+      ctx.moveTo(1.8, 3.4); ctx.lineTo(1.4, 7.2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-7, 0.2);
+      ctx.arc(0, 0.2, 7, Math.PI, 0);
+      ctx.closePath();
+      ctx.fill();
+      dot(ctx, 0, -7.4, 1.7, INK);
+      break;
+    }
+    case "Sorvetes": {
+      // casquinha com bola
+      dot(ctx, 0, -2.6, 5.4, INK);
+      ctx.strokeStyle = GOLD;
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(-6, 2.6); ctx.lineTo(6, 2.6);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-4.6, 3.4); ctx.lineTo(4.6, 3.4); ctx.lineTo(0, 9.6);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    }
+    case "Padaria": {
+      // pão italiano com cortes
+      ctx.rotate(-0.6);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 9, 4.3, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = GOLD;
+      ctx.lineWidth = 1.3;
+      ctx.beginPath();
+      for (const x of [-4.2, 0, 4.2]) {
+        ctx.moveTo(x - 0.8, -2.4);
+        ctx.lineTo(x + 0.8, 2.4);
+      }
+      ctx.stroke();
       break;
     }
     case "Hambúrguer": {

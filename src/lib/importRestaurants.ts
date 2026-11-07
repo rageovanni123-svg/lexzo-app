@@ -175,14 +175,26 @@ function googleCategory(o: Record<string, unknown>): string | null {
     .filter((c): c is string => !!c)
     .map(norm);
   const has = (re: RegExp) => cats.some((c) => re.test(c));
+  const t = norm(title);
   if (BURGER_TITLE.test(title) || has(/hamburguer/)) return "Hambúrguer";
-  if (has(/pizzaria|italian|massa/)) return "Italiana";
+  if (has(/pizzaria/) || /pizza/.test(t)) return "Pizza";
   if (has(/japon|sushi|temaki/)) return "Japonesa";
+  if (has(/italian|massa|cantina/)) return "Italiana";
+  if (has(/arabe|libanes|esfiha|kebab|shawarma/)) return "Árabe";
+  if (has(/chines|yakisoba/)) return "Chinesa";
+  if (has(/mexican|taco/)) return "Mexicana";
   if (has(/vegetarian|vegano/)) return "Vegetariana";
-  if (has(/acai|sorveteria/)) return "Açaí";
+  if (has(/saudavel|salada|fit/)) return "Saudável";
+  if (has(/acai/) || /acai/.test(t)) return "Açaí";
+  if (has(/sorveteria|gelateria|sundae/)) return "Sorvetes";
+  if (has(/confeitaria|doceria|bolo|chocolate|doces/)) return "Doces e Bolos";
+  if (has(/padaria/)) return "Padaria";
   if (has(/cafeteria|^cafe$/)) return "Café";
-  if (has(/lanchonete|sanduich|fast.?food|cachorro|diner|pastelaria/)) return "Hambúrguer";
-  if (has(/restaurante|churrascaria|buffet|comida/)) return "Brasileira";
+  if (has(/pastelaria/) || /pastel/.test(t)) return "Pastel";
+  if (has(/churrascaria|steak|carne|parrilla|rodizio/)) return "Carnes";
+  if (has(/marmit|restaurante self|self.?service|prato feito/)) return "Marmita";
+  if (has(/lanchonete|sanduich|fast.?food|cachorro|diner|hot dog/)) return "Lanches";
+  if (has(/restaurante|buffet|comida|brasileir/)) return "Brasileira";
   return null;
 }
 

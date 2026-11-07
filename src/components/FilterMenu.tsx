@@ -10,13 +10,16 @@ interface Props {
   delivery: boolean;
   onCategory: (c: Category | null) => void;
   onDelivery: (d: boolean) => void;
+  /** Quantos lugares há em cada categoria (categorias sem lugares ficam apagadas). */
+  counts?: Record<string, number>;
+  total?: number;
 }
 
 /**
  * Botão redondo de filtros + painel lateral com seções e subseções.
  * Só "Restaurantes" está ativo; as outras seções aparecem como "Em breve".
  */
-export function FilterMenu({ category, delivery, onCategory, onDelivery }: Props) {
+export function FilterMenu({ category, delivery, onCategory, onDelivery, counts, total }: Props) {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>("restaurantes");
 
@@ -112,6 +115,7 @@ export function FilterMenu({ category, delivery, onCategory, onDelivery }: Props
                           {s.active && (
                             <SubItem
                               label="Todos os restaurantes"
+                              count={total}
                               selected={category === null}
                               onClick={() => onCategory(null)}
                             />
@@ -134,6 +138,8 @@ export function FilterMenu({ category, delivery, onCategory, onDelivery }: Props
                               <SubItem
                                 key={it.label}
                                 label={it.label}
+                                count={counts?.[c]}
+                                disabled={counts !== undefined && (counts[c] ?? 0) === 0 && category !== c}
                                 selected={category === c}
                                 onClick={() => onCategory(category === c ? null : c)}
                               />
@@ -168,11 +174,13 @@ export function FilterMenu({ category, delivery, onCategory, onDelivery }: Props
 
 function SubItem({
   label,
+  count,
   selected,
   disabled,
   onClick,
 }: {
   label: string;
+  count?: number;
   selected?: boolean;
   disabled?: boolean;
   onClick?: () => void;
@@ -196,7 +204,8 @@ function SubItem({
           selected ? "bg-[#2437C9] shadow-[0_0_0_3px_rgba(36,55,201,0.2)]" : "bg-[#0E1330]/25"
         }`}
       />
-      <span className="truncate">{label}</span>
+      <span className="flex-1 truncate">{label}</span>
+      {count !== undefined && <span className="shrink-0 text-xs tabular-nums opacity-70">{count}</span>}
     </button>
   );
 }

@@ -61,7 +61,7 @@ export function ifoodUrl(r: Pick<Restaurant, "ifoodUrl" | "menuUrl">): string | 
 
 export function restaurantDescription(r: Restaurant): string {
   if (r.description) return r.description;
-  return `${r.name}: restaurante de comida ${r.category.toLowerCase()} no bairro ${r.neighborhood}, ${DEFAULT_CITY.name}${
+  return `${r.name}: ${r.category} no bairro ${r.neighborhood}, ${DEFAULT_CITY.name}${
     r.delivery ? ", com delivery" : ""
   }.`;
 }

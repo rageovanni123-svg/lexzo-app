@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useNavigate } from "@tanstack/react-router";
@@ -41,6 +41,12 @@ export function RestaurantMap() {
     search, setSearch,
     filtered,
   } = useRestaurantFilters(restaurants);
+
+  const categoryCounts = useMemo(() => {
+    const m: Record<string, number> = {};
+    for (const r of restaurants) m[r.category] = (m[r.category] ?? 0) + 1;
+    return m;
+  }, [restaurants]);
 
   // ─── UI State ───────────────────────────────────────────────────────────────
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -315,6 +321,8 @@ export function RestaurantMap() {
             delivery={delivery}
             onCategory={setCategory}
             onDelivery={setDelivery}
+            counts={categoryCounts}
+            total={restaurants.length}
           />
         </div>
       </div>

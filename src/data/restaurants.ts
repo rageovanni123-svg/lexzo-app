@@ -1,4 +1,26 @@
-export type Category = "Italiana" | "Japonesa" | "Brasileira" | "Hambúrguer" | "Café" | "Vegetariana" | "Açaí";
+/** Categorias de comida (no estilo do iFood). Para incluir uma nova: acrescente aqui, em CATEGORY_EMOJI e em useMapMarkers.drawGlyph. */
+export const categories = [
+  "Hambúrguer",
+  "Lanches",
+  "Pizza",
+  "Italiana",
+  "Brasileira",
+  "Marmita",
+  "Japonesa",
+  "Carnes",
+  "Saudável",
+  "Vegetariana",
+  "Árabe",
+  "Chinesa",
+  "Mexicana",
+  "Pastel",
+  "Doces e Bolos",
+  "Açaí",
+  "Sorvetes",
+  "Padaria",
+  "Café",
+] as const;
+export type Category = (typeof categories)[number];
 
 export interface Hours {
   weekdays: string;
@@ -39,15 +61,6 @@ export interface Restaurant {
   updatedAt?: string;
 }
 
-export const categories: Category[] = [
-  "Italiana",
-  "Japonesa",
-  "Brasileira",
-  "Hambúrguer",
-  "Café",
-  "Vegetariana",
-  "Açaí",
-];
 
 /** 25 -> "a partir de R$ 25" | 24.9 -> "a partir de R$ 24,90" | undefined -> undefined */
 export function priceFromLabel(value?: number | null): string | undefined {
@@ -60,13 +73,25 @@ export function priceFromLabel(value?: number | null): string | undefined {
 }
 
 export const CATEGORY_EMOJI: Record<Category, string> = {
-  Italiana: "🍕",
-  Japonesa: "🍣",
-  Brasileira: "🍛",
   Hambúrguer: "🍔",
-  Café: "☕",
-  Vegetariana: "🥗",
+  Lanches: "🌭",
+  Pizza: "🍕",
+  Italiana: "🍝",
+  Brasileira: "🍛",
+  Marmita: "🍱",
+  Japonesa: "🍣",
+  Carnes: "🥩",
+  Saudável: "🥗",
+  Vegetariana: "🥬",
+  Árabe: "🥙",
+  Chinesa: "🥡",
+  Mexicana: "🌮",
+  Pastel: "🥟",
+  "Doces e Bolos": "🍰",
   Açaí: "🍧",
+  Sorvetes: "🍦",
+  Padaria: "🥖",
+  Café: "☕",
 };
 
 /** "Trattoria Bella" -> "trattoria-bella". Mesma regra usada no banco (coluna slug). */
