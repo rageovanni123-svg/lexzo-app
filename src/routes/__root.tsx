@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { Analytics } from "@vercel/analytics/react";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 
 function NotFoundComponent() {
@@ -131,6 +132,8 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
+      {/* Vercel Web Analytics (sem cookies). O painel admin não entra na contagem. */}
+      <Analytics beforeSend={(event) => (new URL(event.url).pathname.startsWith("/admin") ? null : event)} />
     </QueryClientProvider>
   );
 }
