@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchKnown, findDuplicate, type Known } from "@/lib/duplicates";
 import { Button } from "@/components/ui/button";
 import { categories } from "@/data/restaurants";
 import { NEIGHBORHOODS, NEIGHBORHOOD_BY_NAME } from "@/data/neighborhoods";
@@ -76,9 +77,23 @@ export function RestaurantImport({ onDone }: { onDone: () => void }) {
       }
       for (const r of existing ?? []) have.add(r.slug as string);
     }
+    // parecido com algo já cadastrado (telefone, nome e região) ou repetido dentro da própria lista
+    let pool: Known[] = [];
+    try {
+      pool = await fetchKnown();
+    } catch (e) {
+      setMsg(`Erro ao consultar o banco: ${(e as Error).message}`);
+      return;
+    }
+    const seen: Known[] = [];
     const start = parsed.map((p) => {
-      const next = { ...p, duplicate: have.has(p.row.slug) };
-      return { ...next, include: ready(next) && !next.startOff };
+      const cand: Known = { name: p.row.name, phone: p.row.phone, neighborhood: p.row.neighborhood, lat: p.row.lat, lng: p.row.lng };
+      const dup = have.has(p.row.slug);
+      const hit = dup ? null : findDuplicate(cand, pool) ?? findDuplicate(cand, seen);
+      seen.push(cand);
+      const similar = hit ? `${hit.other.name}${hit.other.neighborhood ? ` (${hit.other.neighborhood})` : ""} — ${hit.reason}` : null;
+      const next = { ...p, duplicate: dup, similar };
+      return { ...next, include: ready(next) && !next.startOff && !similar };
     });
     setItems(start);
     setFilter("todos");
@@ -165,7 +180,7 @@ export function RestaurantImport({ onDone }: { onDone: () => void }) {
   // ── Tela 2: revisar ─────────────────────────────────────────────────────
   const total = items.length;
   const readyCount = items.filter(ready).length;
-  const attention = (it: ImportItem) => !ready(it) || it.warnings.length > 0 || it.duplicate;
+  const attention = (it: ImportItem) => !ready(it) || it.warnings.length > 0 || it.duplicate || !!it.similar;
   const shown = items.filter((it) => (filter === "todos" ? true : filter === "atencao" ? attention(it) : ready(it)));
 
   return (
@@ -262,6 +277,11 @@ export function RestaurantImport({ onDone }: { onDone: () => void }) {
                   <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
                     <span className={`rounded-full px-2 py-0.5 font-medium ${st.cls}`}>{st.label}</span>
                     {it.duplicate && <span className="rounded-full bg-destructive/10 px-2 py-0.5 font-medium text-destructive">Já existe no app</span>}
+                    {it.similar && (
+                      <span className="rounded-full bg-amber-100 px-2 py-0.5 font-medium text-amber-900">
+                        Possível duplicado: {it.similar}
+                      </span>
+                    )}
                     {it.confidence && <span className="text-muted-foreground">{it.confidence}</span>}
                     {it.mapsUrl && (
                       <a href={it.mapsUrl} target="_blank" rel="noopener noreferrer" className="text-primary underline">

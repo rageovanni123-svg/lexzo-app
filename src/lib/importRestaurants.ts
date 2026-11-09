@@ -48,6 +48,8 @@ export interface ImportItem {
   notes: string | null;
   mapsUrl: string | null;
   duplicate: boolean;
+  /** Parecido com outro lugar (já no app ou na própria lista): texto com o motivo. */
+  similar: string | null;
   include: boolean;
 }
 
@@ -369,6 +371,7 @@ export function parseImportText(text: string): { items: ImportItem[]; error?: st
       notes: str(o._observacoes),
       mapsUrl: safeHttpUrl(str(o._maps_url)) ?? null,
       duplicate: false,
+      similar: null,
       include: false,
     };
   });

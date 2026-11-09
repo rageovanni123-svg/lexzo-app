@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchKnown, findDuplicate } from "@/lib/duplicates";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -215,6 +216,20 @@ export function RestaurantForm({ id, onDone }: { id: string | null; onDone: () =
       return;
     }
     const payload = { ...rest, price_from: priceNumber, slug, instagram: instagramHandle || null, image: f.image || null, gallery: cleanGallery };
+    if (!id) {
+      try {
+        const hit = findDuplicate(
+          { name: f.name, phone: f.phone, neighborhood: f.neighborhood, lat: f.lat, lng: f.lng },
+          await fetchKnown(),
+        );
+        if (hit && !window.confirm(`Possível duplicado: "${hit.other.name}"${hit.other.neighborhood ? ` (${hit.other.neighborhood})` : ""} — ${hit.reason}.\n\nCadastrar mesmo assim?`)) {
+          setSaving(false);
+          return;
+        }
+      } catch {
+        /* sem a checagem, segue o cadastro normal */
+      }
+    }
     const { error } = id
       ? await supabase.from("restaurants").update(payload).eq("id", id)
       : await supabase.from("restaurants").insert(payload);
