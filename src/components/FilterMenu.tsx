@@ -8,6 +8,10 @@ import { Logo } from "./Logo";
 interface Props {
   category: Category | null;
   delivery: boolean;
+  openNow: boolean;
+  onOpenNow: (v: boolean) => void;
+  /** Quantos lugares estão abertos agora (entre todos). */
+  openCount?: number;
   onCategory: (c: Category | null) => void;
   onDelivery: (d: boolean) => void;
   /** Quantos lugares há em cada categoria (categorias sem lugares ficam apagadas). */
@@ -19,11 +23,11 @@ interface Props {
  * Botão redondo de filtros + painel lateral com seções e subseções.
  * Só "Restaurantes" está ativo; as outras seções aparecem como "Em breve".
  */
-export function FilterMenu({ category, delivery, onCategory, onDelivery, counts, total }: Props) {
+export function FilterMenu({ category, delivery, openNow, onOpenNow, openCount, onCategory, onDelivery, counts, total }: Props) {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>("restaurantes");
 
-  const activeCount = (category ? 1 : 0) + (delivery ? 1 : 0);
+  const activeCount = (category ? 1 : 0) + (delivery ? 1 : 0) + (openNow ? 1 : 0);
 
   useEffect(() => {
     if (!open) return;
@@ -35,6 +39,7 @@ export function FilterMenu({ category, delivery, onCategory, onDelivery, counts,
   const clear = () => {
     onCategory(null);
     onDelivery(false);
+    onOpenNow(false);
   };
 
   return (
@@ -118,6 +123,16 @@ export function FilterMenu({ category, delivery, onCategory, onDelivery, counts,
                               count={total}
                               selected={category === null}
                               onClick={() => onCategory(null)}
+                            />
+                          )}
+
+                          {s.active && (
+                            <SubItem
+                              label="Abertos agora"
+                              count={openCount}
+                              disabled={openCount === 0 && !openNow}
+                              selected={openNow}
+                              onClick={() => onOpenNow(!openNow)}
                             />
                           )}
 

@@ -21,9 +21,12 @@ import {
   CLUSTER_COUNT_LAYER_ID,
   RESTAURANT_COUNT_LAYER_ID,
   CLUSTER_COLOR,
-  GROUP_ICON_ID,
+  OPEN_STATES,
+  groupIconId,
   pinIconId,
+  type OpenState,
 } from "@/lib/mapSource";
+import { isOpenNow } from "@/lib/hours";
 
 const MAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
 const DEFAULT_CENTER: [number, number] = [-48.2766, -18.9186];
@@ -35,12 +38,30 @@ export function RestaurantMap() {
 
   // ─── Data ───────────────────────────────────────────────────────────────────
   const { data: restaurants = [] } = useRestaurants();
+  // Reavalia "aberto agora" a cada minuto.
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 60_000);
+    return () => clearInterval(id);
+  }, []);
   const {
     category, setCategory,
     delivery, setDelivery,
+    openNow, setOpenNow,
     search, setSearch,
     filtered,
-  } = useRestaurantFilters(restaurants);
+  } = useRestaurantFilters(restaurants, tick);
+
+  const openCountAll = useMemo(
+    () => restaurants.filter((r) => isOpenNow(r.hours) === true).length,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [restaurants, tick],
+  );
+  const openCountShown = useMemo(
+    () => filtered.filter((r) => isOpenNow(r.hours) === true).length,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filtered, tick],
+  );
 
   const categoryCounts = useMemo(() => {
     const m: Record<string, number> = {};
@@ -75,13 +96,14 @@ export function RestaurantMap() {
     const initLayers = () => {
       // Register pin images
       const registerPins = () => {
-        const pins: [string, Category | null][] = [
-          [GROUP_ICON_ID, null],
-          ...categories.map((c): [string, Category | null] => [pinIconId(c), c]),
-        ];
+        const pins: [string, Category | null, OpenState][] = [];
+        for (const st of OPEN_STATES) {
+          pins.push([groupIconId(st), null, st]);
+          for (const c of categories) pins.push([pinIconId(c, st), c, st]);
+        }
         try {
-          for (const [id, cat] of pins) {
-            const img = createRestaurantMarkerImage(cat);
+          for (const [id, cat, st] of pins) {
+            const img = createRestaurantMarkerImage(cat, st);
             if (!img) continue;
             if (map.hasImage(id)) map.updateImage(id, img);
             else map.addImage(id, img, { pixelRatio: 2 });
@@ -249,7 +271,7 @@ export function RestaurantMap() {
     if (!map) return;
     const source = map.getSource(RESTAURANT_SOURCE_ID) as maplibregl.GeoJSONSource | undefined;
     source?.setData(buildSourceData(filtered, selectedId));
-  }, [filtered, selectedId]);
+  }, [filtered, selectedId, tick]);
 
   // ─── Deselect when selected restaurant is filtered out ─────────────────────
   useEffect(() => {
@@ -315,12 +337,24 @@ export function RestaurantMap() {
         <div className="mt-2 flex items-center justify-between px-4">
           <span className="pointer-events-auto text-xs font-medium text-foreground/70">
             {filtered.length} {filtered.length === 1 ? "lugar" : "lugares"}
+            {openCountShown > 0 && (
+              <>
+                {" · "}
+                <span className="inline-flex items-center gap-1 font-semibold text-foreground">
+                  <span aria-hidden className="h-2 w-2 rounded-full bg-[#1FA45B] ring-2 ring-white" />
+                  {openCountShown} {openCountShown === 1 ? "aberto agora" : "abertos agora"}
+                </span>
+              </>
+            )}
           </span>
           <FilterMenu
             category={category}
             delivery={delivery}
             onCategory={setCategory}
             onDelivery={setDelivery}
+            openNow={openNow}
+            onOpenNow={setOpenNow}
+            openCount={openCountAll}
             counts={categoryCounts}
             total={restaurants.length}
           />

@@ -11,4 +11,4 @@ export const SITE_DESCRIPTION =
  * Única cidade cadastrada por enquanto. Só é usada em dados de cada lugar (endereço no Google,
  * busca de endereço no admin). Quando houver mais cidades, isso vira uma coluna `city` no banco.
  */
-export const DEFAULT_CITY = { name: "Uberlândia", region: "MG" };
+export const DEFAULT_CITY = { name: "Uberlândia", region: "MG", timezone: "America/Sao_Paulo" };

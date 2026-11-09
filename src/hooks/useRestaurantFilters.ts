@@ -5,16 +5,20 @@
  */
 import { useMemo, useState } from "react";
 import type { Category, Restaurant } from "@/data/restaurants";
+import { isOpenNow } from "@/lib/hours";
 
 export interface FilterState {
   category: Category | null;
   delivery: boolean;
+  openNow: boolean;
   search: string;
 }
 
-export function useRestaurantFilters(restaurants: Restaurant[]) {
+/** `tick` muda a cada minuto para reavaliar quem está aberto. */
+export function useRestaurantFilters(restaurants: Restaurant[], tick = 0) {
   const [category, setCategory] = useState<Category | null>(null);
   const [delivery, setDelivery] = useState(false);
+  const [openNow, setOpenNow] = useState(false);
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
@@ -22,6 +26,7 @@ export function useRestaurantFilters(restaurants: Restaurant[]) {
     return restaurants.filter((r) => {
       if (category && r.category !== category) return false;
       if (delivery && !r.delivery) return false;
+      if (openNow && isOpenNow(r.hours) !== true) return false;
       if (q) {
         const matches =
           r.name.toLowerCase().includes(q) ||
@@ -31,11 +36,13 @@ export function useRestaurantFilters(restaurants: Restaurant[]) {
       }
       return true;
     });
-  }, [restaurants, category, delivery, search]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [restaurants, category, delivery, openNow, search, tick]);
 
   return {
     category, setCategory,
     delivery, setDelivery,
+    openNow, setOpenNow,
     search, setSearch,
     filtered,
   };

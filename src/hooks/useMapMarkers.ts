@@ -8,6 +8,7 @@
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import { CATEGORY_EMOJI, type Category, type Restaurant } from "@/data/restaurants";
+import type { OpenState } from "@/lib/mapSource";
 
 const PLATE_FILL = "#FFC629"; // gema
 const PLATE_EDGE = "#2437C9"; // ultramarino
@@ -23,8 +24,11 @@ function plate(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h
   ctx.closePath();
 }
 
-const INK = PLATE_EDGE;
-const GOLD = PLATE_FILL;
+/** Verde da bolinha "aberto agora". */
+const OPEN_GREEN = "#1FA45B";
+
+let INK = PLATE_EDGE;
+let GOLD = PLATE_FILL;
 
 function dot(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string) {
   ctx.save();
@@ -382,10 +386,16 @@ function drawGlyph(ctx: CanvasRenderingContext2D, category: Category, cx: number
  * o desenho da comida da categoria e uma haste. Sem categoria = pin de grupo (duas chapas
  * empilhadas; o número é desenhado por uma camada de texto do mapa).
  */
-export function createRestaurantMarkerImage(category: Category | null) {
+export function createRestaurantMarkerImage(category: Category | null, state: OpenState = "unknown") {
   const pr = 2;
-  const width = 36 * pr;
-  const height = 42 * pr;
+  // 2px extras no topo e 1px de cada lado para caber a bolinha de "aberto" sem mudar a posição do pino.
+  const width = 38 * pr;
+  const height = 44 * pr;
+  const closed = state === "closed";
+  const fillColor = closed ? "#E7EAF2" : PLATE_FILL;
+  const edgeColor = closed ? "#9AA1BC" : PLATE_EDGE;
+  INK = edgeColor;
+  GOLD = fillColor;
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
@@ -393,7 +403,8 @@ export function createRestaurantMarkerImage(category: Category | null) {
   if (!ctx) return null;
 
   ctx.scale(pr, pr);
-  ctx.clearRect(0, 0, 36, 42);
+  ctx.translate(1, 2);
+  ctx.clearRect(-1, -2, 38, 44);
   ctx.lineJoin = "round";
 
   const grouped = category === null;
@@ -408,33 +419,48 @@ export function createRestaurantMarkerImage(category: Category | null) {
   ctx.lineTo(22, top + 22);
   ctx.lineTo(18, 40);
   ctx.closePath();
-  ctx.fillStyle = PLATE_EDGE;
+  ctx.fillStyle = edgeColor;
   ctx.fill();
 
   // chapa de trás (só no grupo)
   if (grouped) {
     plate(ctx, 6, 1, 28, 24, 6);
-    ctx.fillStyle = PLATE_FILL;
+    ctx.fillStyle = fillColor;
     ctx.fill();
     ctx.shadowColor = "transparent";
     ctx.lineWidth = 2.5;
-    ctx.strokeStyle = PLATE_EDGE;
+    ctx.strokeStyle = edgeColor;
     ctx.stroke();
     ctx.shadowColor = PLATE_SHADOW;
   }
 
   // chapa da frente
   plate(ctx, 3, top, 28, 24, 6);
-  ctx.fillStyle = PLATE_FILL;
+  ctx.fillStyle = fillColor;
   ctx.fill();
   ctx.shadowColor = "transparent";
   ctx.shadowBlur = 0;
   ctx.shadowOffsetY = 0;
   ctx.lineWidth = 2.5;
-  ctx.strokeStyle = PLATE_EDGE;
+  ctx.strokeStyle = edgeColor;
   ctx.stroke();
 
   if (category) drawGlyph(ctx, category, 17, top + 12);
+
+  if (state === "open") {
+    // bolinha verde de "aberto agora" no canto da plaquinha
+    ctx.beginPath();
+    ctx.arc(30, top + 1, 5, 0, Math.PI * 2);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(30, top + 1, 3.4, 0, Math.PI * 2);
+    ctx.fillStyle = OPEN_GREEN;
+    ctx.fill();
+  }
+
+  INK = PLATE_EDGE;
+  GOLD = PLATE_FILL;
 
   return ctx.getImageData(0, 0, width, height);
 }
