@@ -237,22 +237,30 @@ function RestaurantContent({ r }: { r: Restaurant }) {
           </div>
         )}
 
-        {/* Redes sociais */}
-        {(instagramHandle || facebookHandle) && (
-          <div className="mt-5 flex flex-wrap items-center gap-2 text-[14px]">
-            {instagramHandle && (
-              <a
-                href={`https://instagram.com/${instagramHandle}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass-btn inline-flex items-center gap-2 rounded-full px-3 py-1.5"
-              >
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-tr from-[#feda75] via-[#d62976] to-[#4f5bd5] text-white">
-                  <FaInstagram className="h-3.5 w-3.5" />
-                </span>
-                <span className="font-medium text-foreground">@{instagramHandle}</span>
-              </a>
-            )}
+        {/* Cartão do Instagram: leva ao perfil para ver as fotos */}
+        {instagramHandle && (
+          <a
+            href={`https://instagram.com/${instagramHandle}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-5 flex items-center gap-3 rounded-2xl bg-card p-3.5 shadow-sm transition-transform active:scale-[0.99]"
+          >
+            <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#feda75] via-[#d62976] to-[#4f5bd5] text-white">
+              <FaInstagram className="h-6 w-6" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-[15px] font-semibold text-foreground">@{instagramHandle}</span>
+              <span className="block text-[13px] text-muted-foreground">Veja fotos e novidades no Instagram</span>
+            </span>
+            <span className="shrink-0 rounded-full bg-primary px-4 py-2 text-[14px] font-semibold text-primary-foreground">
+              Ver fotos
+            </span>
+          </a>
+        )}
+
+        {/* Outras redes sociais */}
+        {facebookHandle && (
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-[14px]">
             {facebookHandle && (
               <a
                 href={facebookUrl}
