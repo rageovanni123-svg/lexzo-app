@@ -12,7 +12,7 @@ import { LocationListSheet } from "./LocationListSheet";
 import { SearchBar } from "./SearchBar";
 import { useRestaurants } from "@/hooks/useRestaurants";
 import { useRestaurantFilters } from "@/hooks/useRestaurantFilters";
-import { usePhotoMarker, createRestaurantMarkerImage } from "@/hooks/useMapMarkers";
+import { usePhotoMarker, createRestaurantMarkerImage, createClusterMarkerImage } from "@/hooks/useMapMarkers";
 import {
   buildSourceData,
   RESTAURANT_SOURCE_ID,
@@ -20,7 +20,6 @@ import {
   CLUSTER_LAYER_ID,
   CLUSTER_COUNT_LAYER_ID,
   RESTAURANT_COUNT_LAYER_ID,
-  CLUSTER_COLOR,
   OPEN_STATES,
   groupIconId,
   pinIconId,
@@ -29,6 +28,8 @@ import {
 import { isOpenNow } from "@/lib/hours";
 
 const MAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
+/** Lado (px) do quadrado do aglomerado, por faixa de quantidade (<10, <25, <50, 50+). */
+const CLUSTER_SIZES = [26, 34, 42, 52];
 const DEFAULT_CENTER: [number, number] = [-48.2766, -18.9186];
 
 export function RestaurantMap() {
@@ -102,6 +103,13 @@ export function RestaurantMap() {
           for (const c of categories) pins.push([pinIconId(c, st), c, st]);
         }
         try {
+          CLUSTER_SIZES.forEach((size, i) => {
+            const img = createClusterMarkerImage(size);
+            if (!img) return;
+            const id = `cluster-sq-${i}`;
+            if (map.hasImage(id)) map.updateImage(id, img);
+            else map.addImage(id, img, { pixelRatio: 2 });
+          });
           for (const [id, cat, st] of pins) {
             const img = createRestaurantMarkerImage(cat, st);
             if (!img) continue;
@@ -129,15 +137,13 @@ export function RestaurantMap() {
       if (!map.getLayer(CLUSTER_LAYER_ID)) {
         map.addLayer({
           id: CLUSTER_LAYER_ID,
-          type: "circle",
+          type: "symbol",
           source: RESTAURANT_SOURCE_ID,
           filter: ["has", "point_count"],
-          paint: {
-            "circle-color": CLUSTER_COLOR,
-            "circle-stroke-color": "#ffffff",
-            "circle-stroke-width": 3,
-            "circle-opacity": 0.95,
-            "circle-radius": ["step", ["get", "point_count"], 13, 10, 17, 25, 21, 50, 26],
+          layout: {
+            "icon-image": ["step", ["get", "point_count"], "cluster-sq-0", 10, "cluster-sq-1", 25, "cluster-sq-2", 50, "cluster-sq-3"],
+            "icon-allow-overlap": true,
+            "icon-ignore-placement": true,
           },
         });
 
@@ -200,7 +206,7 @@ export function RestaurantMap() {
             "text-ignore-placement": true,
           },
           paint: {
-            "text-color": "#2437C9",
+            "text-color": "#0E1330",
             "text-halo-color": "#FFC629",
             "text-halo-width": 0,
           },

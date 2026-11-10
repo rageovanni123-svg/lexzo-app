@@ -11,7 +11,7 @@ import { CATEGORY_EMOJI, type Category, type Restaurant } from "@/data/restauran
 import type { OpenState } from "@/lib/mapSource";
 
 const PLATE_FILL = "#FFC629"; // gema
-const PLATE_EDGE = "#2437C9"; // ultramarino
+const PLATE_EDGE = "#0E1330"; // tinta escura (contorno, haste e ícone)
 const PLATE_SHADOW = "rgba(14,19,48,0.35)";
 
 function plate(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
@@ -410,38 +410,38 @@ export function createRestaurantMarkerImage(category: Category | null, state: Op
   const grouped = category === null;
   const top = grouped ? 5 : 3;
 
-  // haste
+  // haste fina
   ctx.shadowColor = PLATE_SHADOW;
   ctx.shadowBlur = 6;
   ctx.shadowOffsetY = 2;
   ctx.beginPath();
-  ctx.moveTo(14, top + 22);
-  ctx.lineTo(22, top + 22);
-  ctx.lineTo(18, 40);
-  ctx.closePath();
-  ctx.fillStyle = edgeColor;
-  ctx.fill();
+  ctx.moveTo(17, top + 24);
+  ctx.lineTo(17, 40);
+  ctx.lineWidth = 2;
+  ctx.lineCap = "butt";
+  ctx.strokeStyle = edgeColor;
+  ctx.stroke();
 
-  // chapa de trás (só no grupo)
+  // quadrado de trás (só no grupo)
   if (grouped) {
-    plate(ctx, 6, 1, 28, 24, 6);
+    plate(ctx, 7, 0, 26, 26, 1);
     ctx.fillStyle = fillColor;
     ctx.fill();
     ctx.shadowColor = "transparent";
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 2;
     ctx.strokeStyle = edgeColor;
     ctx.stroke();
     ctx.shadowColor = PLATE_SHADOW;
   }
 
-  // chapa da frente
-  plate(ctx, 3, top, 28, 24, 6);
+  // quadrado da frente
+  plate(ctx, 4, top - 1, 26, 26, 1);
   ctx.fillStyle = fillColor;
   ctx.fill();
   ctx.shadowColor = "transparent";
   ctx.shadowBlur = 0;
   ctx.shadowOffsetY = 0;
-  ctx.lineWidth = 2.5;
+  ctx.lineWidth = 2;
   ctx.strokeStyle = edgeColor;
   ctx.stroke();
 
@@ -450,11 +450,11 @@ export function createRestaurantMarkerImage(category: Category | null, state: Op
   if (state === "open") {
     // bolinha verde de "aberto agora" no canto da plaquinha
     ctx.beginPath();
-    ctx.arc(30, top + 1, 5, 0, Math.PI * 2);
+    ctx.arc(30, top - 1, 5, 0, Math.PI * 2);
     ctx.fillStyle = "#FFFFFF";
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(30, top + 1, 3.4, 0, Math.PI * 2);
+    ctx.arc(30, top - 1, 3.4, 0, Math.PI * 2);
     ctx.fillStyle = OPEN_GREEN;
     ctx.fill();
   }
@@ -463,6 +463,30 @@ export function createRestaurantMarkerImage(category: Category | null, state: Op
   GOLD = PLATE_FILL;
 
   return ctx.getImageData(0, 0, width, height);
+}
+
+/** Aglomerado: quadrado azul com borda branca (o número é desenhado por uma camada de texto do mapa). */
+export function createClusterMarkerImage(size: number) {
+  const pr = 2;
+  const pad = 6;
+  const total = size + pad * 2;
+  const canvas = document.createElement("canvas");
+  canvas.width = total * pr;
+  canvas.height = total * pr;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return null;
+  ctx.scale(pr, pr);
+  ctx.shadowColor = PLATE_SHADOW;
+  ctx.shadowBlur = 6;
+  ctx.shadowOffsetY = 2;
+  plate(ctx, pad, pad, size, size, 1);
+  ctx.fillStyle = "#2437C9";
+  ctx.fill();
+  ctx.shadowColor = "transparent";
+  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = "#FFFFFF";
+  ctx.stroke();
+  return ctx.getImageData(0, 0, total * pr, total * pr);
 }
 
 function createPhotoPinElement(restaurant: Restaurant, onClick: () => void): HTMLButtonElement {
@@ -477,14 +501,14 @@ function createPhotoPinElement(restaurant: Restaurant, onClick: () => void): HTM
 
   const pin = document.createElement("div");
   pin.style.cssText = [
-    "position:relative", "width:64px", "height:64px", "border-radius:9999px",
+    "position:relative", "width:64px", "height:64px", "border-radius:4px",
     "background:#2437C9", "padding:4px", "box-sizing:border-box",
   ].join(";");
 
   const img = document.createElement("img");
   img.src = restaurant.image;
   img.alt = restaurant.name;
-  img.style.cssText = ["width:100%", "height:100%", "border-radius:9999px", "object-fit:cover", "display:block"].join(";");
+  img.style.cssText = ["width:100%", "height:100%", "border-radius:2px", "object-fit:cover", "display:block"].join(";");
   img.onerror = () => {
     pin.textContent = CATEGORY_EMOJI[restaurant.category] ?? "🍽️";
     pin.style.display = "flex";
@@ -496,8 +520,7 @@ function createPhotoPinElement(restaurant: Restaurant, onClick: () => void): HTM
 
   const tail = document.createElement("div");
   tail.style.cssText = [
-    "width:14px", "height:14px", "background:#2437C9",
-    "transform:translateY(-7px) rotate(45deg)", "border-radius:2px",
+    "width:3px", "height:16px", "background:#2437C9",
   ].join(";");
 
   const label = document.createElement("div");
