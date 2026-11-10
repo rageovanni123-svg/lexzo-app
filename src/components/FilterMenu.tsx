@@ -47,7 +47,7 @@ export function FilterMenu({ category, delivery, openNow, onOpenNow, openCount, 
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="glass-btn pointer-events-auto relative flex h-11 w-11 items-center justify-center rounded-full text-foreground"
+        className="glass-btn pointer-events-auto relative flex h-12 w-12 items-center justify-center rounded-full text-foreground"
         aria-label="Abrir filtros"
         aria-haspopup="dialog"
         aria-expanded={open}

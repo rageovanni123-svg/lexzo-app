@@ -5,7 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 
 import { categories, type Category, type Restaurant } from "@/data/restaurants";
 import { FilterMenu } from "./FilterMenu";
-import { Logo } from "./Logo";
+import { SITE_NAME } from "@/lib/site";
 import { LocateButton } from "./LocateButton";
 import { RestaurantCard } from "./RestaurantCard";
 import { LocationListSheet } from "./LocationListSheet";
@@ -328,11 +328,8 @@ export function RestaurantMap() {
 
       {/* ─── Top overlay: search + filters ─── */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-20 mx-auto max-w-xl">
-        <div className="pointer-events-auto px-4 pt-3">
-          <h1 className="text-[32px] drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
-            <Logo />
-          </h1>
-        </div>
+        <h1 className="sr-only">{SITE_NAME}</h1>
+        <div className="h-[max(0.75rem,env(safe-area-inset-top))]" />
         <SearchBar
           restaurants={restaurants}
           value={search}
@@ -340,8 +337,8 @@ export function RestaurantMap() {
           onSelectNeighborhood={handleSelectNeighborhood}
           onSelectRestaurant={handleSelectRestaurant}
         />
-        <div className="mt-2 flex items-center justify-between px-4">
-          <span className="pointer-events-auto text-xs font-medium text-foreground/70">
+        <div className="mt-3 flex items-center justify-between gap-3 px-4">
+          <span className="glass pointer-events-auto flex h-10 items-center gap-2 rounded-full px-3.5 text-[13px] font-medium text-foreground">
             {filtered.length} {filtered.length === 1 ? "lugar" : "lugares"}
             {openCountShown > 0 && (
               <>
@@ -380,8 +377,8 @@ export function RestaurantMap() {
         </div>
       )}
 
-      {/* ─── Minha localização (some enquanto o card do restaurante está aberto) ─── */}
-      <LocateButton mapRef={mapRef} hidden={!!selected} />
+      {/* ─── Minha localização (sobe quando o card do lugar está aberto) ─── */}
+      <LocateButton mapRef={mapRef} raised={!!selected} />
 
       {/* ─── Version badge ─── */}
       <div className="pointer-events-none absolute bottom-2 left-2 z-20 rounded-md bg-card/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground shadow-sm backdrop-blur">

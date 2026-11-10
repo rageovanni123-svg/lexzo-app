@@ -4,8 +4,8 @@ import { Loader2, LocateFixed } from "lucide-react";
 
 interface Props {
   mapRef: React.RefObject<maplibregl.Map | null>;
-  /** Esconde o botão (ex.: card do restaurante aberto) sem apagar o pin da pessoa. */
-  hidden?: boolean;
+  /** Sobe o botão para não ficar atrás do card do lugar. */
+  raised?: boolean;
 }
 
 function createUserDot(): HTMLDivElement {
@@ -24,7 +24,7 @@ function createUserDot(): HTMLDivElement {
  * Botão "minha localização": pede a posição do aparelho, centraliza o mapa nela
  * e marca o ponto com um pin azul pulsante.
  */
-export function LocateButton({ mapRef, hidden }: Props) {
+export function LocateButton({ mapRef, raised }: Props) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const markerRef = useRef<maplibregl.Marker | null>(null);
@@ -82,7 +82,7 @@ export function LocateButton({ mapRef, hidden }: Props) {
 
   return (
     <div
-      className={`pointer-events-none absolute bottom-6 right-4 z-20 flex-col items-end gap-2 ${hidden ? "hidden" : "flex"}`}
+      className={`pointer-events-none absolute right-4 z-20 flex flex-col items-end gap-2 transition-[bottom] duration-300 ${raised ? "bottom-[216px]" : "bottom-6"}`}
     >
       {message && (
         <p

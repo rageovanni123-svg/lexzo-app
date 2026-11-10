@@ -47,7 +47,7 @@ export function SearchBar({ restaurants, value, onChange, onSelectNeighborhood, 
 
   return (
     <div ref={wrapRef} className="pointer-events-auto relative mx-4 mt-3">
-      <div className="glass flex items-center gap-2 rounded-2xl px-3 py-2.5">
+      <div className="glass flex h-12 items-center gap-2.5 rounded-full px-4">
         <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
         <input
           value={value}
