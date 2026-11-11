@@ -26,6 +26,8 @@ export interface DbRow {
   gallery: string[] | null;
   description: string | null;
   updated_at: string | null;
+  /** Arquivado: não aparece no mapa. Ausente = ativo (antes da migração). */
+  archived?: boolean | null;
 }
 
 export const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80";
@@ -63,7 +65,7 @@ async function fetchRestaurants(): Promise<Restaurant[]> {
   const { data, error } = await supabase.from("restaurants").select("*").order("name");
   if (error) throw error;
   return (data as DbRow[])
-    .filter((r) => r.lat != null && r.lng != null)
+    .filter((r) => r.lat != null && r.lng != null && !r.archived)
     .map(rowToRestaurant);
 }
 

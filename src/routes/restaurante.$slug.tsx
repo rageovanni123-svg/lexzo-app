@@ -29,7 +29,7 @@ export const Route = createFileRoute("/restaurante/$slug")({
       .eq("slug", target)
       .maybeSingle();
     if (error) throw error;
-    if (!data) return { restaurant: null };
+    if (!data || (data as DbRow).archived) return { restaurant: null };
 
     // Qualquer variação de caixa/acentos na URL redireciona para o endereço canônico.
     if (params.slug !== target) {

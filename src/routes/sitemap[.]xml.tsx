@@ -14,7 +14,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         // Slugs reais, direto do banco (a policy de leitura é pública).
         const { data, error } = await supabase
           .from("restaurants")
-          .select("slug, updated_at")
+          .select("*")
           .order("slug");
         if (error) {
           return new Response("Sitemap indisponível", { status: 503 });
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/sitemap.xml")({
 
         const urls = [
           entry("/", today, "daily", "1.0"),
-          ...(data ?? []).map((r) =>
+          ...(data ?? []).filter((r) => !r.archived).map((r) =>
             entry(
               `/restaurante/${encodeURIComponent(r.slug)}`,
               (r.updated_at ?? today).slice(0, 10),
