@@ -3,4 +3,6 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://lexzo-app.vercel.app/sitemap.xml
+# Em testes: o site sai com noindex (veja SITE_INDEXABLE em src/lib/site.ts).
+# No lançamento, volte a linha abaixo:
+# Sitemap: https://lexzo-app.vercel.app/sitemap.xml

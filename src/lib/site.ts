@@ -2,6 +2,13 @@
 export const SITE_URL = "https://lexzo-app.vercel.app";
 export const SITE_NAME = "Placeali";
 
+/**
+ * Trava de segurança: enquanto for `false`, todas as páginas saem com `noindex, nofollow` e o Google
+ * não indexa o site. Troque para `true` no dia do lançamento (e devolva a linha "Sitemap:" em
+ * public/robots.txt).
+ */
+export const SITE_INDEXABLE = false;
+
 /** Frase curta usada nos títulos e descrições gerais (sem cidade e sem categoria). */
 export const SITE_TAGLINE = "Encontre lugares no mapa";
 export const SITE_DESCRIPTION =

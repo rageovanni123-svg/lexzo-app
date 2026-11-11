@@ -11,7 +11,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { Analytics } from "@vercel/analytics/react";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_INDEXABLE, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 
 function NotFoundComponent() {
   return (
@@ -75,6 +75,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { title: `${SITE_NAME} — ${SITE_TAGLINE}` },
       { name: "description", content: SITE_DESCRIPTION },
+      ...(SITE_INDEXABLE ? [] : [{ name: "robots", content: "noindex, nofollow" }]),
       { property: "og:site_name", content: SITE_NAME },
       { property: "og:title", content: `${SITE_NAME} — ${SITE_TAGLINE}` },
       { property: "og:description", content: SITE_DESCRIPTION },
