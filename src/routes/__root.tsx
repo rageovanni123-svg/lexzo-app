@@ -13,6 +13,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { SITE_DESCRIPTION, SITE_INDEXABLE, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 
 function NotFoundComponent() {
@@ -157,6 +158,8 @@ function RootComponent() {
       )}
       {/* Vercel Web Analytics (sem cookies). O painel admin não entra na contagem. */}
       <Analytics beforeSend={(event) => (new URL(event.url).pathname.startsWith("/admin") ? null : event)} />
+      {/* Vercel Speed Insights: mede a velocidade real para os visitantes (sem cookies). Também ignora o /admin. */}
+      <SpeedInsights beforeSend={(event) => (new URL(event.url).pathname.startsWith("/admin") ? null : event)} />
     </QueryClientProvider>
   );
 }
