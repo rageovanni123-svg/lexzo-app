@@ -19,3 +19,9 @@ export const SITE_DESCRIPTION =
  * busca de endereço no admin). Quando houver mais cidades, isso vira uma coluna `city` no banco.
  */
 export const DEFAULT_CITY = { name: "Uberlândia", region: "MG", timezone: "America/Sao_Paulo" };
+
+/**
+ * E-mail de contato exibido na Política de Privacidade (pedidos de remoção de dados, dúvidas).
+ * Preencha antes de divulgar o app; enquanto estiver vazio, a página mostra um aviso no lugar.
+ */
+export const CONTACT_EMAIL = "";

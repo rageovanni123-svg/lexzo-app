@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "@tanstack/react-router";
 import { ChevronDown, Menu, SlidersHorizontal, X } from "lucide-react";
 import { type Category } from "@/data/restaurants";
 import { SECTIONS } from "@/data/sections";
@@ -167,6 +168,16 @@ export function FilterMenu({ category, delivery, openNow, onOpenNow, openCount, 
                   );
                 })}
               </nav>
+
+              <div className="px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-1">
+                <Link
+                  to="/privacidade"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex min-h-11 items-center text-xs text-[#5A6182] underline-offset-2 hover:underline"
+                >
+                  Política de Privacidade
+                </Link>
+              </div>
 
               {activeCount > 0 && (
                 <div className="border-t border-[#0E1330]/10 p-4">

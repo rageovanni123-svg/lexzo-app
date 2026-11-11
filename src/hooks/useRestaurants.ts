@@ -61,10 +61,18 @@ export function rowToRestaurant(r: DbRow): Restaurant {
 
 // ─── Query ────────────────────────────────────────────────────────────────────
 
+// O mapa não usa galeria, descrição nem datas: buscar só o necessário deixa a resposta bem menor.
+const MAP_COLUMNS =
+  "id, slug, name, category, neighborhood, price_from, delivery, image, lng, lat, phone, whatsapp, ifood_url, menu_url, instagram, address, hours_weekdays, hours_weekends";
+
 async function fetchRestaurants(): Promise<Restaurant[]> {
-  const { data, error } = await supabase.from("restaurants").select("*").order("name");
-  if (error) throw error;
-  return (data as DbRow[])
+  let res = await supabase.from("restaurants").select(`${MAP_COLUMNS}, archived`).order("name");
+  // Antes de rodar o SQL de arquivamento a coluna ainda não existe: tenta sem ela.
+  if (res.error && /archived/i.test(res.error.message)) {
+    res = (await supabase.from("restaurants").select(MAP_COLUMNS).order("name")) as typeof res;
+  }
+  if (res.error) throw res.error;
+  return (res.data as unknown as DbRow[])
     .filter((r) => r.lat != null && r.lng != null && !r.archived)
     .map(rowToRestaurant);
 }
