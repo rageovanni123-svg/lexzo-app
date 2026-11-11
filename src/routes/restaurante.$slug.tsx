@@ -2,6 +2,7 @@ import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { MapPin, Phone, ArrowLeft, ExternalLink } from "lucide-react";
 import { FaWhatsapp, FaInstagram, FaFacebook } from "react-icons/fa";
 import { InstagramPreview } from "@/components/InstagramPreview";
+import { PhoneActions } from "@/components/PhoneActions";
 import { rowToRestaurant, type DbRow } from "@/hooks/useRestaurants";
 import { isOpenNow, getTodayHours } from "@/lib/hours";
 import { supabase } from "@/integrations/supabase/client";
@@ -165,13 +166,19 @@ function RestaurantContent({ r }: { r: Restaurant }) {
         {/* Contato rápido */}
         <div className="mt-5 flex flex-wrap items-center gap-3">
           {r.phone && (
-            <IconCircle
-              href={`tel:${r.phone.replace(/\D/g, "")}`}
-              label="Ligar"
-              color="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/50"
-            >
-              <Phone className="h-5 w-5" />
-            </IconCircle>
+            <PhoneActions name={r.name} phone={r.phone} whatsapp={r.whatsapp}>
+              {(open) => (
+                <button
+                  type="button"
+                  onClick={open}
+                  aria-label="Ligar ou chamar no WhatsApp"
+                  title="Ligar ou chamar no WhatsApp"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  <Phone className="h-5 w-5" />
+                </button>
+              )}
+            </PhoneActions>
           )}
           {r.whatsapp && (
             <IconCircle
@@ -292,9 +299,13 @@ function RestaurantContent({ r }: { r: Restaurant }) {
               )}
               {r.phone && (
                 <MenuRow label="Telefone">
-                  <a href={`tel:${r.phone.replace(/\D/g, "")}`} className="font-semibold text-primary hover:underline">
-                    {r.phone}
-                  </a>
+                  <PhoneActions name={r.name} phone={r.phone} whatsapp={r.whatsapp}>
+                    {(open) => (
+                      <button type="button" onClick={open} className="font-semibold text-primary hover:underline">
+                        {r.phone}
+                      </button>
+                    )}
+                  </PhoneActions>
                 </MenuRow>
               )}
             </dl>
