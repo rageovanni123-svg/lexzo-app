@@ -1,6 +1,7 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { MapPin, Phone, ArrowLeft, ExternalLink } from "lucide-react";
 import { FaWhatsapp, FaInstagram, FaFacebook } from "react-icons/fa";
+import { InstagramPreview } from "@/components/InstagramPreview";
 import { rowToRestaurant, type DbRow } from "@/hooks/useRestaurants";
 import { isOpenNow, getTodayHours } from "@/lib/hours";
 import { supabase } from "@/integrations/supabase/client";
@@ -237,26 +238,8 @@ function RestaurantContent({ r }: { r: Restaurant }) {
           </div>
         )}
 
-        {/* Cartão do Instagram: leva ao perfil para ver as fotos */}
-        {instagramHandle && (
-          <a
-            href={`https://instagram.com/${instagramHandle}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-5 flex items-center gap-3 rounded-2xl bg-card p-3.5 shadow-sm transition-transform active:scale-[0.99]"
-          >
-            <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#feda75] via-[#d62976] to-[#4f5bd5] text-white">
-              <FaInstagram className="h-6 w-6" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-[15px] font-semibold text-foreground">@{instagramHandle}</span>
-              <span className="block text-[13px] text-muted-foreground">Veja fotos e novidades no Instagram</span>
-            </span>
-            <span className="shrink-0 rounded-full bg-primary px-4 py-2 text-[14px] font-semibold text-primary-foreground">
-              Ver fotos
-            </span>
-          </a>
-        )}
+        {/* Prévia do Instagram (só aparece quando o lugar tem Instagram) */}
+        {instagramHandle && <InstagramPreview handle={instagramHandle} />}
 
         {/* Outras redes sociais */}
         {facebookHandle && (
