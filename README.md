@@ -1,4 +1,4 @@
-# Placeali — encontre lugares no mapa
+# Logoaki — encontre lugares no mapa
 
 Mapa de lugares (começando pelos restaurantes), uma página por estabelecimento (indexável pelo Google)
 e um painel `/admin` para criar e gerenciar os estabelecimentos.

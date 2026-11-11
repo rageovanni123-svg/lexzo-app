@@ -42,7 +42,7 @@ export const Route = createFileRoute("/restaurante/$slug")({
     if (!r) {
       return {
         meta: [
-          { title: "Lugar não encontrado | Placeali" },
+          { title: "Lugar não encontrado | Logoaki" },
           { name: "robots", content: "noindex" },
         ],
       };

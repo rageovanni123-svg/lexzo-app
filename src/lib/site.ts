@@ -1,6 +1,6 @@
 /** Endereço público do site. Troque aqui quando o domínio próprio estiver ligado. */
 export const SITE_URL = "https://lexzo-app.vercel.app";
-export const SITE_NAME = "Placeali";
+export const SITE_NAME = "Logoaki";
 
 /**
  * Trava de segurança: enquanto for `false`, todas as páginas saem com `noindex, nofollow` e o Google
