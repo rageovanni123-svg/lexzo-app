@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Suspense } from "react";
-import { RestaurantMap } from "@/components/RestaurantMap";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
@@ -16,10 +14,7 @@ export const Route = createFileRoute("/")({
   ssr: false,
 });
 
+/** O mapa em si fica no layout raiz (veja __root.tsx), para não recarregar ao voltar da página de um lugar. */
 function Index() {
-  return (
-    <Suspense fallback={null}>
-      <RestaurantMap />
-    </Suspense>
-  );
+  return null;
 }

@@ -1,9 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Suspense, lazy, useEffect, useState } from "react";
 import {
   Outlet,
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
   type ErrorRouteComponent,
@@ -127,12 +129,32 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+const RestaurantMap = lazy(() =>
+  import("@/components/RestaurantMap").then((m) => ({ default: m.RestaurantMap })),
+);
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onMap = pathname === "/";
+
+  // O mapa nasce na primeira visita à página inicial e depois fica guardado (escondido nas
+  // outras telas), assim voltar da página de um lugar não recarrega o mapa nem perde a posição.
+  const [mapStarted, setMapStarted] = useState(false);
+  useEffect(() => {
+    if (onMap) setMapStarted(true);
+  }, [onMap]);
 
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
+      {mapStarted && (
+        <div className={onMap ? undefined : "hidden"}>
+          <Suspense fallback={null}>
+            <RestaurantMap active={onMap} />
+          </Suspense>
+        </div>
+      )}
       {/* Vercel Web Analytics (sem cookies). O painel admin não entra na contagem. */}
       <Analytics beforeSend={(event) => (new URL(event.url).pathname.startsWith("/admin") ? null : event)} />
     </QueryClientProvider>

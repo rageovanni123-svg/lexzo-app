@@ -33,8 +33,20 @@ const MAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
 const CLUSTER_SIZES = [26, 34, 42, 52];
 const DEFAULT_CENTER: [number, number] = [-48.2766, -18.9186];
 
-export function RestaurantMap() {
+interface MapProps {
+  /** `false` quando outra tela (ex.: página do lugar) está por cima: o mapa fica guardado, sem recarregar. */
+  active?: boolean;
+}
+
+export function RestaurantMap({ active = true }: MapProps) {
   const navigate = useNavigate();
+
+  // Ao voltar para o mapa guardado, reajusta o tamanho (ele estava escondido).
+  useEffect(() => {
+    if (!active) return;
+    const id = requestAnimationFrame(() => mapRef.current?.resize());
+    return () => cancelAnimationFrame(id);
+  }, [active]);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
 
