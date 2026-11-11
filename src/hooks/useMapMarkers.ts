@@ -489,20 +489,23 @@ export function createClusterMarkerImage(size: number) {
   return ctx.getImageData(0, 0, total * pr, total * pr);
 }
 
-function createPhotoPinElement(restaurant: Restaurant, onClick: () => void): HTMLButtonElement {
+function createPhotoPinElement(restaurant: Restaurant): HTMLButtonElement {
   const wrap = document.createElement("button");
   wrap.type = "button";
-  wrap.setAttribute("aria-label", `Ver detalhes de ${restaurant.name}`);
+  wrap.setAttribute("aria-label", restaurant.name);
+  wrap.tabIndex = -1;
+  // Só é um destaque visual: não captura toques, para os pins vizinhos continuarem clicáveis.
+  // Os detalhes abrem pelo botão "Ver detalhes" do cartão.
   wrap.style.cssText = [
     "appearance:none", "border:none", "background:transparent", "padding:0",
-    "cursor:pointer", "display:flex", "flex-direction:column", "align-items:center",
+    "pointer-events:none", "display:flex", "flex-direction:column", "align-items:center",
     "transform-origin:center bottom", "filter:drop-shadow(0 6px 14px rgba(0,0,0,0.35))",
   ].join(";");
 
   const pin = document.createElement("div");
   pin.style.cssText = [
-    "position:relative", "width:64px", "height:64px", "border-radius:4px",
-    "background:#2437C9", "padding:4px", "box-sizing:border-box",
+    "position:relative", "width:48px", "height:48px", "border-radius:4px",
+    "background:#2437C9", "padding:3px", "box-sizing:border-box",
   ].join(";");
 
   const img = document.createElement("img");
@@ -514,26 +517,17 @@ function createPhotoPinElement(restaurant: Restaurant, onClick: () => void): HTM
     pin.style.display = "flex";
     pin.style.alignItems = "center";
     pin.style.justifyContent = "center";
-    pin.style.fontSize = "28px";
+    pin.style.fontSize = "22px";
   };
   pin.appendChild(img);
 
   const tail = document.createElement("div");
   tail.style.cssText = [
-    "width:3px", "height:16px", "background:#2437C9",
-  ].join(";");
-
-  const label = document.createElement("div");
-  label.textContent = restaurant.name;
-  label.style.cssText = [
-    "margin-top:2px", "color:#fff", "font-weight:700", "font-size:13px",
-    "text-shadow:0 1px 4px rgba(0,0,0,0.7)", "white-space:nowrap",
+    "width:3px", "height:10px", "background:#2437C9",
   ].join(";");
 
   wrap.appendChild(pin);
   wrap.appendChild(tail);
-  wrap.appendChild(label);
-  wrap.addEventListener("click", (e) => { e.stopPropagation(); onClick(); });
 
   return wrap;
 }
@@ -541,11 +535,12 @@ function createPhotoPinElement(restaurant: Restaurant, onClick: () => void): HTM
 interface UsePhotoMarkerOptions {
   mapRef: React.RefObject<maplibregl.Map | null>;
   restaurant: Restaurant | null;
-  onOpenDetails: () => void;
+  /** Mantido por compatibilidade: a foto não captura toques; os detalhes abrem pelo cartão. */
+  onOpenDetails?: () => void;
 }
 
 /** Manages the "selected restaurant" photo-pin marker imperatively. */
-export function usePhotoMarker({ mapRef, restaurant, onOpenDetails }: UsePhotoMarkerOptions) {
+export function usePhotoMarker({ mapRef, restaurant }: UsePhotoMarkerOptions) {
   const markerRef = useRef<maplibregl.Marker | null>(null);
 
   useEffect(() => {
@@ -556,7 +551,7 @@ export function usePhotoMarker({ mapRef, restaurant, onOpenDetails }: UsePhotoMa
     markerRef.current = null;
 
     if (restaurant) {
-      const el = createPhotoPinElement(restaurant, onOpenDetails);
+      const el = createPhotoPinElement(restaurant);
       markerRef.current = new maplibregl.Marker({ element: el, anchor: "bottom" })
         .setLngLat(restaurant.coords)
         .addTo(map);
