@@ -180,7 +180,7 @@ export function RestaurantsTable() {
               <th className="px-3 py-2">Categoria</th>
               <th className="px-3 py-2">Bairro</th>
               <th className="px-3 py-2">A partir de</th>
-              <th className="px-3 py-2">Links</th>
+              <th className="hidden px-3 py-2 md:table-cell">Links</th>
               <th className="px-3 py-2"></th>
             </tr>
           </thead>
@@ -203,10 +203,14 @@ export function RestaurantsTable() {
                     {noLoc && <span className="mr-1 text-destructive">●</span>}
                     {r.name}
                   </td>
-                  <td className="px-3 py-2">{r.category}</td>
+                  <td className="px-3 py-2">
+                    {r.category}
+                    {/* No celular os ícones ficam junto da categoria; no computador há uma coluna própria. */}
+                    <div className="mt-1.5 md:hidden"><LinkBadges r={r} /></div>
+                  </td>
                   <td className="px-3 py-2">{r.neighborhood}</td>
                   <td className="px-3 py-2">{r.price_from != null ? priceFromLabel(Number(r.price_from))?.replace("a partir de ", "") : "—"}</td>
-                  <td className="px-3 py-2"><LinkBadges r={r} /></td>
+                  <td className="hidden px-3 py-2 md:table-cell"><LinkBadges r={r} /></td>
                   <td className="whitespace-nowrap px-3 py-2 text-right">
                     <Button variant="ghost" size="icon" className="h-9 w-9" asChild>
                       <a href={`/restaurante/${encodeURIComponent(r.slug)}`} target="_blank" rel="noopener noreferrer" aria-label="Ver página">
