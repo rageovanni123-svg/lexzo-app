@@ -5,7 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { RestaurantForm } from "./RestaurantForm";
 import { RestaurantImport } from "./RestaurantImport";
 import { priceFromLabel } from "@/data/restaurants";
-import { Pencil, Trash2, Plus, ExternalLink, Upload, Archive, ArchiveRestore } from "lucide-react";
+import { Pencil, Trash2, Plus, ExternalLink, Upload, Archive, ArchiveRestore, Globe, ShoppingBag } from "lucide-react";
+import { FaInstagram } from "react-icons/fa";
 
 interface Row {
   id: string;
@@ -17,6 +18,37 @@ interface Row {
   lat: number | null;
   lng: number | null;
   archived?: boolean | null;
+  instagram?: string | null;
+  menu_url?: string | null;
+  ifood_url?: string | null;
+}
+
+const filled = (v?: string | null) => !!v && v.trim() !== "";
+
+/** Mostra se o cadastro já tem Instagram, site (Cardápio URL) e link do iFood. */
+function LinkBadges({ r }: { r: Row }) {
+  const items = [
+    { label: "Instagram", ok: filled(r.instagram), Icon: FaInstagram },
+    { label: "Site / cardápio", ok: filled(r.menu_url), Icon: Globe },
+    { label: "iFood", ok: filled(r.ifood_url), Icon: ShoppingBag },
+  ];
+  return (
+    <div className="flex items-center gap-1">
+      {items.map(({ label, ok, Icon }) => (
+        <span
+          key={label}
+          role="img"
+          aria-label={`${label}: ${ok ? "preenchido" : "vazio"}`}
+          title={`${label}: ${ok ? "preenchido" : "vazio"}`}
+          className={`inline-flex h-7 w-7 items-center justify-center rounded-md ${
+            ok ? "bg-primary text-primary-foreground" : "border border-dashed border-border text-muted-foreground/40"
+          }`}
+        >
+          <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+        </span>
+      ))}
+    </div>
+  );
 }
 
 export function RestaurantsTable() {
@@ -141,22 +173,23 @@ export function RestaurantsTable() {
       {error && <p className="text-sm text-destructive">Erro ao carregar: {(error as Error).message}</p>}
 
       <div className="overflow-x-auto rounded-lg border border-border">
-        <table className="w-full min-w-[640px] text-sm">
+        <table className="w-full min-w-[720px] text-sm">
           <thead className="bg-muted/50 text-left text-xs uppercase text-muted-foreground">
             <tr>
               <th className="px-3 py-2">Nome</th>
               <th className="px-3 py-2">Categoria</th>
               <th className="px-3 py-2">Bairro</th>
               <th className="px-3 py-2">A partir de</th>
+              <th className="px-3 py-2">Links</th>
               <th className="px-3 py-2"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {isLoading && (
-              <tr><td colSpan={5} className="px-3 py-6 text-center text-muted-foreground">Carregando…</td></tr>
+              <tr><td colSpan={6} className="px-3 py-6 text-center text-muted-foreground">Carregando…</td></tr>
             )}
             {data && rows?.length === 0 && (
-              <tr><td colSpan={5} className="px-3 py-6 text-center text-muted-foreground">{tab === "archived" ? "Nenhum restaurante arquivado." : "Nenhum restaurante cadastrado."}</td></tr>
+              <tr><td colSpan={6} className="px-3 py-6 text-center text-muted-foreground">{tab === "archived" ? "Nenhum restaurante arquivado." : "Nenhum restaurante cadastrado."}</td></tr>
             )}
             {rows?.map((r) => {
               const noLoc = r.lat == null || r.lng == null;
@@ -173,6 +206,7 @@ export function RestaurantsTable() {
                   <td className="px-3 py-2">{r.category}</td>
                   <td className="px-3 py-2">{r.neighborhood}</td>
                   <td className="px-3 py-2">{r.price_from != null ? priceFromLabel(Number(r.price_from))?.replace("a partir de ", "") : "—"}</td>
+                  <td className="px-3 py-2"><LinkBadges r={r} /></td>
                   <td className="whitespace-nowrap px-3 py-2 text-right">
                     <Button variant="ghost" size="icon" className="h-9 w-9" asChild>
                       <a href={`/restaurante/${encodeURIComponent(r.slug)}`} target="_blank" rel="noopener noreferrer" aria-label="Ver página">
