@@ -10,6 +10,8 @@ import { DEFAULT_CITY } from "@/lib/site";
 import { Switch } from "@/components/ui/switch";
 import { NEIGHBORHOODS, NEIGHBORHOOD_BY_NAME } from "@/data/neighborhoods";
 import { categories, slugify } from "@/data/restaurants";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { LinkBadges } from "./LinkBadges";
 
 const MAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
 
@@ -59,7 +61,15 @@ const empty: FormState = {
   description: "",
 };
 
-export function RestaurantForm({ id, onDone }: { id: string | null; onDone: () => void }) {
+export interface FormNav {
+  position: number;
+  total: number;
+  prevId: string | null;
+  nextId: string | null;
+  go: (id: string) => void;
+}
+
+export function RestaurantForm({ id, onDone, nav }: { id: string | null; onDone: () => void; nav?: FormNav }) {
   const [f, setF] = useState<FormState>(empty);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -70,12 +80,26 @@ export function RestaurantForm({ id, onDone }: { id: string | null; onDone: () =
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const markerRef = useRef<maplibregl.Marker | null>(null);
+  // Foto do formulário recém-carregado, para saber se há alterações não salvas ao navegar.
+  const snapshot = useRef<string>("");
+
+  const goTo = (target: string | null) => {
+    if (!target || !nav) return;
+    if (JSON.stringify(f) !== snapshot.current && !window.confirm("Há alterações não salvas neste cadastro. Ir para outro mesmo assim?")) return;
+    nav.go(target);
+  };
 
   // Load existing
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      snapshot.current = JSON.stringify(empty);
+      return;
+    }
+    setErr(null);
+    window.scrollTo(0, 0);
+    let cancelled = false;
     supabase.from("restaurants").select("*").eq("id", id).maybeSingle().then(({ data }) => {
-      if (data) {
+      if (data && !cancelled) {
         // Coerce nullable string columns to "" so .trim() never blows up.
         const stringKeys: (keyof FormState)[] = [
           "name","slug","category","neighborhood","image","phone","whatsapp",
@@ -98,8 +122,14 @@ export function RestaurantForm({ id, onDone }: { id: string | null; onDone: () =
           ? (rawGallery as unknown[]).filter((u): u is string => typeof u === "string")
           : [];
         setF(merged);
+        setSlugEdited(true);
+        snapshot.current = JSON.stringify(merged);
+        mapRef.current?.jumpTo({ center: [merged.lng, merged.lat] });
       }
     });
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   // Init map
@@ -245,9 +275,26 @@ export function RestaurantForm({ id, onDone }: { id: string | null; onDone: () =
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">{id ? "Editar restaurante" : "Novo restaurante"}</h2>
-        <Button type="button" variant="glass" onClick={onDone}>Cancelar</Button>
+      {/* Barra fixa no topo: navegar entre cadastros e ver rápido o que já está preenchido. */}
+      <div className="sticky top-0 z-10 -mx-1 space-y-2 border-b border-border bg-background/95 px-1 pb-2 pt-2 backdrop-blur">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="min-w-0 truncate text-lg font-semibold">{id ? (f.name || "Editar restaurante") : "Novo restaurante"}</h2>
+          <Button type="button" variant="glass" onClick={onDone}>Cancelar</Button>
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <LinkBadges instagram={f.instagram} menuUrl={f.menu_url} ifoodUrl={f.ifood_url} />
+          {nav && (
+            <div className="flex items-center gap-1">
+              <Button type="button" variant="outline" size="sm" disabled={!nav.prevId} onClick={() => goTo(nav.prevId)} aria-label="Restaurante anterior">
+                <ChevronLeft className="h-4 w-4" /> Anterior
+              </Button>
+              <span className="px-2 text-xs tabular-nums text-muted-foreground" aria-live="polite">{nav.position} de {nav.total}</span>
+              <Button type="button" variant="outline" size="sm" disabled={!nav.nextId} onClick={() => goTo(nav.nextId)} aria-label="Próximo restaurante">
+                Próximo <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
