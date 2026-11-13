@@ -27,6 +27,9 @@ export function isOpenNow(hours: Hours | undefined): boolean | null {
   const { day, minutes: currentMinutes } = nowInCity(); // 0 = domingo, 6 = sábado
   const isWeekend = day === 0 || day === 6;
   const schedule = isWeekend && hours.weekends ? hours.weekends : hours.weekdays;
+  const closed = hours.closedDays ?? [];
+  const closedToday = closed.includes(day);
+  const closedYesterday = closed.includes((day + 6) % 7);
 
   const [openStr, closeStr] = schedule.split("–");
   if (!openStr || !closeStr) return null;
@@ -39,12 +42,12 @@ export function isOpenNow(hours: Hours | undefined): boolean | null {
   const openMinutes = toMinutes(openStr);
   let closeMinutes = toMinutes(closeStr);
 
-  // Handle closing after midnight (e.g. 23:00 – 02:00)
+  // Handle closing after midnight (e.g. 23:00 – 02:00): a madrugada ainda é do expediente de ontem.
   if (closeMinutes < openMinutes) {
-    return currentMinutes >= openMinutes || currentMinutes < closeMinutes;
+    return (currentMinutes >= openMinutes && !closedToday) || (currentMinutes < closeMinutes && !closedYesterday);
   }
 
-  return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
+  return !closedToday && currentMinutes >= openMinutes && currentMinutes < closeMinutes;
 }
 
 /** Returns the current schedule string for the restaurant. */

@@ -20,16 +20,20 @@ function openingHours(r: Restaurant) {
   const hasWeekendInfo = Boolean(r.hours.weekends);
   const weekend = parseRange(r.hours.weekends);
 
+  const ALL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const closedNames = new Set((r.hours.closedDays ?? []).map((d) => ALL[d]));
+  const open = (days: string[]) => days.filter((d) => !closedNames.has(d));
+
   const specs: Array<Record<string, unknown>> = [];
   if (week) {
     specs.push({
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: hasWeekendInfo ? WEEKDAYS : [...WEEKDAYS, ...WEEKEND],
+      dayOfWeek: open(hasWeekendInfo ? WEEKDAYS : [...WEEKDAYS, ...WEEKEND]),
       ...week,
     });
   }
   if (weekend) {
-    specs.push({ "@type": "OpeningHoursSpecification", dayOfWeek: WEEKEND, ...weekend });
+    specs.push({ "@type": "OpeningHoursSpecification", dayOfWeek: open(WEEKEND), ...weekend });
   }
   return specs.length ? specs : undefined;
 }

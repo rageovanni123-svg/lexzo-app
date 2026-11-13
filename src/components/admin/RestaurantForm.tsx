@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { DEFAULT_CITY } from "@/lib/site";
 import { Switch } from "@/components/ui/switch";
 import { NEIGHBORHOODS, NEIGHBORHOOD_BY_NAME } from "@/data/neighborhoods";
-import { categories, slugify } from "@/data/restaurants";
+import { DAY_NAMES, categories, slugify } from "@/data/restaurants";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { LinkBadges } from "./LinkBadges";
 
@@ -34,6 +34,7 @@ interface FormState {
   address: string;
   hours_weekdays: string;
   hours_weekends: string;
+  closed_days: number[];
   gallery: string[];
   description: string;
 }
@@ -57,6 +58,7 @@ const empty: FormState = {
   address: "",
   hours_weekdays: "",
   hours_weekends: "",
+  closed_days: [],
   gallery: [],
   description: "",
 };
@@ -117,6 +119,8 @@ export function RestaurantForm({ id, onDone, nav }: { id: string | null; onDone:
           merged.lat = empty.lat;
           merged.lng = empty.lng;
         }
+        const rawClosed = (data as { closed_days?: unknown }).closed_days;
+        merged.closed_days = Array.isArray(rawClosed) ? (rawClosed as unknown[]).filter((n): n is number => typeof n === "number") : [];
         const rawGallery = (data as { gallery?: unknown }).gallery;
         merged.gallery = Array.isArray(rawGallery)
           ? (rawGallery as unknown[]).filter((u): u is string => typeof u === "string")
@@ -354,6 +358,40 @@ export function RestaurantForm({ id, onDone, nav }: { id: string | null; onDone:
         <Field label="Instagram (@handle ou URL)"><Input value={f.instagram} onChange={(e) => setField("instagram", e.target.value)} placeholder="@perfil ou https://instagram.com/perfil" /></Field>
         <Field label="Horário semana"><Input value={f.hours_weekdays} onChange={(e) => setField("hours_weekdays", e.target.value)} placeholder="11:00–23:00" /></Field>
         <Field label="Horário fim de semana"><Input value={f.hours_weekends} onChange={(e) => setField("hours_weekends", e.target.value)} placeholder="12:00–00:00" /></Field>
+        <div className="md:col-span-2">
+          <fieldset>
+            <legend className="mb-1.5 text-sm font-medium">Dias em que fecha (o dia todo)</legend>
+            <div className="flex flex-wrap gap-2">
+              {DAY_NAMES.map((name, d) => {
+                const on = f.closed_days.includes(d);
+                return (
+                  <label
+                    key={d}
+                    className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-4 text-sm capitalize transition-colors ${
+                      on ? "border-destructive bg-destructive/10 font-medium text-destructive" : "border-border"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-[var(--destructive)]"
+                      checked={on}
+                      onChange={() =>
+                        setField(
+                          "closed_days",
+                          on ? f.closed_days.filter((x) => x !== d) : [...f.closed_days, d].sort(),
+                        )
+                      }
+                    />
+                    {name}
+                  </label>
+                );
+              })}
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Esses dias aparecem como “Fechado” no mapa e na página, mesmo dentro do horário acima.
+            </p>
+          </fieldset>
+        </div>
 
         <div className="md:col-span-2">
           <Field label="Descrição (breve)">

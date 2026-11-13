@@ -25,7 +25,11 @@ export type Category = (typeof categories)[number];
 export interface Hours {
   weekdays: string;
   weekends?: string;
+  /** Dias em que fecha o dia todo (0 = domingo ... 6 = sábado). */
+  closedDays?: number[];
 }
+
+export const DAY_NAMES = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"] as const;
 
 export interface Restaurant {
   id: string;

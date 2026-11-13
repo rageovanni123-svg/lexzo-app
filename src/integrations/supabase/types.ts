@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           address: string | null
           archived: boolean
+          closed_days: number[]
           category: string
           created_at: string
           delivery: boolean
@@ -43,6 +44,7 @@ export type Database = {
         Insert: {
           address?: string | null
           archived?: boolean
+          closed_days?: number[]
           category: string
           created_at?: string
           delivery?: boolean
@@ -68,6 +70,7 @@ export type Database = {
         Update: {
           address?: string | null
           archived?: boolean
+          closed_days?: number[]
           category?: string
           created_at?: string
           delivery?: boolean

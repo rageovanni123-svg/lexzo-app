@@ -28,6 +28,7 @@ export interface DbRow {
   updated_at: string | null;
   /** Arquivado: não aparece no mapa. Ausente = ativo (antes da migração). */
   archived?: boolean | null;
+  closed_days?: number[] | null;
 }
 
 export const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80";
@@ -51,7 +52,11 @@ export function rowToRestaurant(r: DbRow): Restaurant {
     instagram: r.instagram ?? undefined,
     address: r.address ?? undefined,
     hours: r.hours_weekdays
-      ? { weekdays: r.hours_weekdays, weekends: r.hours_weekends ?? undefined }
+      ? {
+          weekdays: r.hours_weekdays,
+          weekends: r.hours_weekends ?? undefined,
+          closedDays: Array.isArray(r.closed_days) && r.closed_days.length ? r.closed_days : undefined,
+        }
       : undefined,
     gallery: Array.isArray(r.gallery) ? r.gallery.filter(Boolean) : [],
     description: r.description ?? undefined,
@@ -63,7 +68,7 @@ export function rowToRestaurant(r: DbRow): Restaurant {
 
 // O mapa não usa galeria, descrição nem datas: buscar só o necessário deixa a resposta bem menor.
 const MAP_COLUMNS =
-  "id, slug, name, category, neighborhood, price_from, delivery, image, lng, lat, phone, whatsapp, ifood_url, menu_url, instagram, address, hours_weekdays, hours_weekends";
+  "id, slug, name, category, neighborhood, price_from, delivery, image, lng, lat, phone, whatsapp, ifood_url, menu_url, instagram, address, hours_weekdays, hours_weekends, closed_days";
 
 async function fetchRestaurants(): Promise<Restaurant[]> {
   // Os arquivados nem saem do servidor.

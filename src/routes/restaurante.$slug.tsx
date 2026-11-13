@@ -16,7 +16,7 @@ import {
 } from "@/lib/seo";
 import { safeHttpUrl } from "@/lib/safe-url";
 import { DEFAULT_CITY, SITE_NAME } from "@/lib/site";
-import { priceFromLabel, slugify, type Restaurant } from "@/data/restaurants";
+import { DAY_NAMES, priceFromLabel, slugify, type Restaurant } from "@/data/restaurants";
 
 export const Route = createFileRoute("/restaurante/$slug")({
   loader: async ({ params }): Promise<{ restaurant: Restaurant | null }> => {
@@ -293,6 +293,11 @@ function RestaurantContent({ r }: { r: Restaurant }) {
                   {r.hours.weekends && (
                     <MenuRow label="Sáb e dom" today={todayIsWeekend}>
                       {r.hours.weekends}
+                    </MenuRow>
+                  )}
+                  {!!r.hours.closedDays?.length && (
+                    <MenuRow label="Fecha" today={r.hours.closedDays.includes(day)}>
+                      {r.hours.closedDays.map((d) => DAY_NAMES[d]).join(", ")}
                     </MenuRow>
                   )}
                 </>
